@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql.auth;
+package com.taxiandcabservice.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private String SECRET_KEY;
+    private final String SECRET_KEY;
 
     public JwtUtil() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
@@ -61,5 +61,20 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public boolean validateToken(String token) {
+        if (token == null) return false;
+
+        try { return !isTokenExpired(token); }
+        catch (Exception e) { return false; }
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date(System.currentTimeMillis()));
+    }
+
+    private Date extractExpiration(String token) {
+         return extractClaim(token, Claims::getExpiration);
     }
 }

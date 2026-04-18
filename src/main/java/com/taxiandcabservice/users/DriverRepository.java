@@ -1,10 +1,10 @@
-package com.taxiandcabservice.accessing_data_mysql.common;
+package com.taxiandcabservice.users;
 
 import org.springframework.data.repository.CrudRepository;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
-public interface RegionRepository extends CrudRepository<Region, Integer> {
+public interface DriverRepository extends CrudRepository<Driver, Integer> {
 
 }

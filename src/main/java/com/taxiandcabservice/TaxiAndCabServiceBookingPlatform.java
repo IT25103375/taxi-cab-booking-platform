@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql;
+package com.taxiandcabservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,16 +1,20 @@
-package com.taxiandcabservice.accessing_data_mysql.common;
+package com.taxiandcabservice.common;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Region {
+public class SubRegion {
     @Id
     @GeneratedValue
     private Long id;
 
     private String name;
+
+    @ManyToOne
+    private Region region;
 
     public Long getId() {
         return id;
@@ -26,5 +30,13 @@ public class Region {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 }

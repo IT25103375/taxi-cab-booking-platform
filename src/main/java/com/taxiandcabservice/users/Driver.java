@@ -1,12 +1,11 @@
-package com.taxiandcabservice.accessing_data_mysql.users;
+package com.taxiandcabservice.users;
 
-import com.taxiandcabservice.accessing_data_mysql.common.Region;
-import com.taxiandcabservice.accessing_data_mysql.common.SubRegion;
-import com.taxiandcabservice.accessing_data_mysql.common.VehicleType;
+import com.taxiandcabservice.common.Region;
+import com.taxiandcabservice.common.SubRegion;
+import com.taxiandcabservice.common.VehicleType;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "drivers")
 public class Driver extends Passenger{
 
     @ManyToOne

@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql.common;
+package com.taxiandcabservice.common;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
