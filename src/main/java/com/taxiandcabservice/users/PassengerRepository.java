@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql.users;
+package com.taxiandcabservice.users;
 
 import org.springframework.data.repository.CrudRepository;
 

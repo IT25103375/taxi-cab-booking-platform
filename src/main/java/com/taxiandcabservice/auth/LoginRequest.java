@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql.auth;
+package com.taxiandcabservice.auth;
 
 public class LoginRequest {
     private String email;

@@ -1,4 +1,4 @@
-package com.taxiandcabservice.accessing_data_mysql.auth;
+package com.taxiandcabservice.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
