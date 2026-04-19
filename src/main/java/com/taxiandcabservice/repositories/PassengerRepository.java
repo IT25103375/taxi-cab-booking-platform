@@ -1,5 +1,6 @@
-package com.taxiandcabservice.users;
+package com.taxiandcabservice.repositories;
 
+import com.taxiandcabservice.entities.Passenger;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
@@ -8,6 +9,4 @@ import java.util.Optional;
 // CRUD refers Create, Read, Update, Delete
 
 public interface PassengerRepository extends CrudRepository<Passenger, Integer> {
-
-    Optional<Passenger> findByEmail(String email);
 }
