@@ -26,31 +26,35 @@ public class SubRegion {
         return id;
     }
 
-    public void setId(Integer id) {
+    public SubRegion setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public SubRegion setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Region getRegion() {
         return region;
     }
 
-    public void setRegion(Region region) {
+    public SubRegion setRegion(Region region) {
         this.region = region;
+        return this;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public SubRegion setDisplayName(String displayName) {
         this.displayName = displayName;
+        return this;
     }
 }

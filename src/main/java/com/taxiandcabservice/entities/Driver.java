@@ -4,6 +4,8 @@ import com.taxiandcabservice.enums.DriverStatus;
 import jakarta.persistence.*;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 @Entity
 public class Driver{
 
@@ -15,8 +17,8 @@ public class Driver{
     @JoinColumn(name = "authId", nullable = false)
     private AuthEntity authEntity;
 
-    @ManyToOne
-    private VehicleType vehicleType;
+    @OneToMany
+    private List<Vehicle> registeredVehicles;
 
     @ManyToOne
     private Region region;
@@ -27,12 +29,12 @@ public class Driver{
     @Enumerated(EnumType.STRING)
     private DriverStatus status;
 
-    public VehicleType getVehicleType() {
-        return vehicleType;
+    public List<Vehicle> getRegisteredVehicles() {
+        return registeredVehicles;
     }
 
-    public void setVehicleType(VehicleType vehicleType) {
-        this.vehicleType = vehicleType;
+    public void setRegisteredVehicles(List<Vehicle> registeredVehicles) {
+        this.registeredVehicles = registeredVehicles;
     }
 
     public Region getRegion() {
@@ -63,11 +65,11 @@ public class Driver{
         this.status = status;
     }
 
-    public Integer getId() {
+    public @Nullable Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@Nullable Integer id) {
         this.id = id;
     }
 

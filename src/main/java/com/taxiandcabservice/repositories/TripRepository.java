@@ -14,12 +14,12 @@ public interface TripRepository extends CrudRepository<Trip, Integer> {
     WHERE t.driver.id = :driverID
     AND t.tripStatus = 'ONGOING'
     """)
-    public List<Trip> findActiveTrips(Integer driverID);
+    List<Trip> findActiveTrips(Integer driverID);
 
     @Query("""
     UPDATE Trip t
     SET t.tripStatus = :status
     WHERE t.id = :id
     """)
-    public int updateTripStatus(TripStatus status);
+    int updateTripStatus(TripStatus status);
 }

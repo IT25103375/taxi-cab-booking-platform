@@ -1,4 +1,4 @@
-package com.taxiandcabservice.auth;
+package com.taxiandcabservice.dto;
 
 import com.taxiandcabservice.enums.UserType;
 import jakarta.validation.constraints.NotBlank;
@@ -19,14 +19,8 @@ public class RegisterRequest {
     private UserType type;
 
     //Driver-only
-    @NotBlank
     private String regionName;
-
-    @NotBlank
     private String subRegionName;
-
-    @NotBlank
-    private String vehicleTypeName;
 
     public String getUsername() {
         return username;
@@ -76,11 +70,4 @@ public class RegisterRequest {
         this.subRegionName = subRegionName;
     }
 
-    public String getVehicleTypeName() {
-        return vehicleTypeName;
-    }
-
-    public void setVehicleTypeName(String vehicleTypeName) {
-        this.vehicleTypeName = vehicleTypeName;
-    }
 }

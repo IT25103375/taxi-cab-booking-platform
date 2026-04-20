@@ -1,9 +1,9 @@
 package com.taxiandcabservice.controllers;
 
 import com.taxiandcabservice.auth.JwtUtil;
-import com.taxiandcabservice.auth.LoginRequest;
-import com.taxiandcabservice.auth.RegisterRequest;
-import com.taxiandcabservice.auth.TokenResponse;
+import com.taxiandcabservice.dto.LoginRequest;
+import com.taxiandcabservice.dto.RegisterRequest;
+import com.taxiandcabservice.dto.TokenResponse;
 import com.taxiandcabservice.entities.Passenger;
 import com.taxiandcabservice.repositories.DriverRepository;
 import com.taxiandcabservice.repositories.PassengerRepository;
@@ -55,7 +55,7 @@ public class UserController {
 
     @GetMapping(path = "/{id}")
     public Optional<Passenger> getPassenger(@PathVariable Integer id) {
-        // This returns a JSON or XML with the users
+        // TODO
         return passengerRepository.findById(id);
     }
 
