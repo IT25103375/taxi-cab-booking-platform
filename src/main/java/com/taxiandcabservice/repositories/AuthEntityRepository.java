@@ -1,7 +1,6 @@
 package com.taxiandcabservice.repositories;
 
 import com.taxiandcabservice.entities.AuthEntity;
-import com.taxiandcabservice.entities.Passenger;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

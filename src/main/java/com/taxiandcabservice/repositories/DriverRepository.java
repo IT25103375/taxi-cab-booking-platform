@@ -22,7 +22,7 @@ public interface DriverRepository extends CrudRepository<Driver, Integer> {
     @Query("""
     SELECT d FROM Driver d
     WHERE d.subRegion = :subRegion
-    AND d.status = 'AVAILABLE' 
+    AND d.status = 'AVAILABLE'
     """)
     List<Driver> findBySubRegion(SubRegion subRegion);
 }

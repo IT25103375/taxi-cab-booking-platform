@@ -6,4 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/api/booking")
 public class BookingController {
+
+//    @PostMapping("/trip")
+//    public HttpResponse<Object> CreateTrip()
 }

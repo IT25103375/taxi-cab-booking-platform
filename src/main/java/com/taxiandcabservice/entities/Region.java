@@ -16,7 +16,7 @@ public class Region {
 
     @JsonIgnore
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<SubRegion> subRegions = new ArrayList<>();
+    private List<SubRegion> subRegions = new ArrayList<>();
 
     @NotNull
     @Column(unique = true)
@@ -29,23 +29,34 @@ public class Region {
         return id;
     }
 
-    public void setId(Integer id) {
+    public Region setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Region setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public Region setDisplayName(String displayName) {
         this.displayName = displayName;
+        return this;
+    }
+
+    public List<SubRegion> getSubRegions() {
+        return subRegions;
+    }
+
+    public void setSubRegions(List<SubRegion> subRegions) {
+        this.subRegions = subRegions;
     }
 }

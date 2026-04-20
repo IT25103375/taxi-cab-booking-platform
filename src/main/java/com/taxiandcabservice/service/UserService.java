@@ -1,9 +1,9 @@
 package com.taxiandcabservice.service;
 
 import com.taxiandcabservice.auth.JwtUtil;
-import com.taxiandcabservice.auth.LoginRequest;
-import com.taxiandcabservice.auth.RegisterRequest;
-import com.taxiandcabservice.auth.TokenResponse;
+import com.taxiandcabservice.dto.LoginRequest;
+import com.taxiandcabservice.dto.RegisterRequest;
+import com.taxiandcabservice.dto.TokenResponse;
 import com.taxiandcabservice.entities.AuthEntity;
 import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.entities.Passenger;
@@ -73,7 +73,6 @@ public class UserService {
         else if (request.getType() == UserType.DRIVER) {
 
             Driver driver = new Driver();
-            driver.setVehicleType(vehicleTypeService.findVehicleType(request.getVehicleTypeName()).orElseThrow());
             driver.setSubRegion(regionService.findSubRegion(request.getSubRegionName()).orElseThrow());
             driver.setRegion(regionService.findRegion(request.getRegionName()).orElseThrow());
 
@@ -93,13 +92,13 @@ public class UserService {
         //Verify user is in DB
         Optional<AuthEntity> opAuth = authEntityRepository.findByEmail(request.getEmail());
         if (opAuth.isEmpty() ||
-                passwordEncoder.matches(request.getPassword(), opAuth.get().getEncryptedPW())) {
+                !passwordEncoder.matches(request.getPassword(), opAuth.get().getEncryptedPW())) {
 
             token.setSuccess(false);
             token.setError("Invalid Username or Password");
         }
         else {
-            token.setToken(jwtUtil.generateToken(opAuth.get().getUsername()));
+            token.setToken(jwtUtil.generateToken(opAuth.get().getEmail()));
             token.setRole(opAuth.get().getUserType().name());
         }
 

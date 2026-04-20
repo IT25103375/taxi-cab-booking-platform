@@ -1,4 +1,4 @@
-package com.taxiandcabservice.auth;
+package com.taxiandcabservice.dto;
 
 public class LoginRequest {
     private String email;

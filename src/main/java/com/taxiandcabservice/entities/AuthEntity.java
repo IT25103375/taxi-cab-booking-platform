@@ -2,7 +2,11 @@ package com.taxiandcabservice.entities;
 
 import com.taxiandcabservice.enums.UserType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class AuthEntity {
@@ -59,5 +63,10 @@ public class AuthEntity {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        //noinspection preview
+        return List.of(new SimpleGrantedAuthority("ROLE_" + getUserType().name()));
     }
 }
