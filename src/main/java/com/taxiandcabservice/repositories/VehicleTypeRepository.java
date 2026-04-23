@@ -6,6 +6,4 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface VehicleTypeRepository extends CrudRepository<VehicleType, Integer> {
-
-    Optional<VehicleType> findByName(String name);
 }

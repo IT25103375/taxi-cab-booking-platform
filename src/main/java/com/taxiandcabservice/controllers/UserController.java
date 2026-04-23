@@ -11,6 +11,8 @@ import com.taxiandcabservice.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -43,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/auth/login")
-    public TokenResponse login(@RequestBody LoginRequest request) {
+    public TokenResponse login(@Valid @RequestBody LoginRequest request) {
 
         return userService.login(request);
     }
@@ -53,10 +55,19 @@ public class UserController {
         return "test";
     }
 
+    // FIXME: REPLACE OBJECT RESPONSES WITH PROPER ONES
+
     @GetMapping(path = "/{id}")
     public Optional<Passenger> getPassenger(@PathVariable Integer id) {
-        // TODO
+        // TODO : Implement user lookup
         return passengerRepository.findById(id);
+    }
+
+    @GetMapping("/logintest")
+    public ResponseEntity<Object> testLogin() {
+
+        return ResponseEntity.ok(SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal());
     }
 
 //    @PatchMapping

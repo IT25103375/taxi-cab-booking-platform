@@ -34,7 +34,7 @@ public class UserService {
     private AuthEntityRepository authEntityRepository;
 
     @Autowired
-    private VehicleTypeService vehicleTypeService;
+    private VehicleService vehicleService;
 
     @Autowired
     private RegionService regionService;
@@ -56,7 +56,7 @@ public class UserService {
         AuthEntity auth = new AuthEntity();
         auth.setUsername(request.getUsername());
         auth.setEmail(request.getEmail());
-        auth.setEncryptedPW(passwordEncoder.encode(request.getPassword()));
+        auth.setPassword(passwordEncoder.encode(request.getPassword()));
         auth.setUserType(request.getType());
 
         // Construct and save the appropriate user type to correct repository
@@ -73,8 +73,8 @@ public class UserService {
         else if (request.getType() == UserType.DRIVER) {
 
             Driver driver = new Driver();
-            driver.setSubRegion(regionService.findSubRegion(request.getSubRegionName()).orElseThrow());
-            driver.setRegion(regionService.findRegion(request.getRegionName()).orElseThrow());
+            driver.setSubRegion(regionService.findSubRegion(request.getSubRegionId()).orElseThrow());
+            driver.setRegion(regionService.findRegion(request.getRegionId()).orElseThrow());
 
             driver.setAuthEntity(auth);
             authEntityRepository.save(auth);
@@ -92,7 +92,7 @@ public class UserService {
         //Verify user is in DB
         Optional<AuthEntity> opAuth = authEntityRepository.findByEmail(request.getEmail());
         if (opAuth.isEmpty() ||
-                !passwordEncoder.matches(request.getPassword(), opAuth.get().getEncryptedPW())) {
+                !passwordEncoder.matches(request.getPassword(), opAuth.get().getPassword())) {
 
             token.setSuccess(false);
             token.setError("Invalid Username or Password");
@@ -103,5 +103,12 @@ public class UserService {
         }
 
         return token;
+    }
+
+    // TODO: Implement logout with a blacklist cache since JWT is stateless
+
+    @Transactional
+    public Optional<Passenger> findUser(String email) {
+        return passengerRepository.findByEmail(email);
     }
 }

@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface SubRegionMapper {
+public interface RegionMapper {
 
     @Mapping(source = "request.subRegionName", target = "name")
     @Mapping(source = "request.subRegionDisplayName", target = "displayName")

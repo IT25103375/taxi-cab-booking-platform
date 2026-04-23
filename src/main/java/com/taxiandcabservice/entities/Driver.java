@@ -1,5 +1,6 @@
 package com.taxiandcabservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.taxiandcabservice.enums.DriverStatus;
 import jakarta.persistence.*;
 import org.jspecify.annotations.Nullable;
@@ -17,9 +18,15 @@ public class Driver{
     @JoinColumn(name = "authId", nullable = false)
     private AuthEntity authEntity;
 
-    @OneToMany
+    @JsonIgnore
+    @OneToMany(mappedBy = "driver",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Vehicle> registeredVehicles;
 
+    private Integer currentVehicleId;
+
+    @JsonIgnore
     @ManyToOne
     private Region region;
 
@@ -79,5 +86,13 @@ public class Driver{
 
     public void setAuthEntity(AuthEntity authEntity) {
         this.authEntity = authEntity;
+    }
+
+    public Integer getCurrentVehicleId() {
+        return currentVehicleId;
+    }
+
+    public void setCurrentVehicleId(Integer currentVehicleId) {
+        this.currentVehicleId = currentVehicleId;
     }
 }

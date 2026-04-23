@@ -2,7 +2,7 @@ package com.taxiandcabservice.service;
 
 import com.taxiandcabservice.dto.RegionRequest;
 import com.taxiandcabservice.entities.Region;
-import com.taxiandcabservice.mappers.SubRegionMapper;
+import com.taxiandcabservice.mappers.RegionMapper;
 import com.taxiandcabservice.repositories.RegionRepository;
 import com.taxiandcabservice.entities.SubRegion;
 import com.taxiandcabservice.repositories.SubRegionRepository;
@@ -23,16 +23,16 @@ public class RegionService {
     private SubRegionRepository subRegionRepository;
 
     @Autowired
-    private SubRegionMapper subRegionMapper;
+    private RegionMapper regionMapper;
 
     @Transactional
-    public Optional<Region> findRegion(String name) {
-        return regionRepository.findByName(name);
+    public Optional<Region> findRegion(Integer id) {
+        return regionRepository.findById(id);
     }
 
     @Transactional
-    public Optional<SubRegion> findSubRegion(String name) {
-        return subRegionRepository.findByName(name);
+    public Optional<SubRegion> findSubRegion(Integer id) {
+        return subRegionRepository.findById(id);
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class RegionService {
         List<SubRegion> subRegions = subRegionRepository.findByRegionName(request.getRegionName());
 
         // Add new subregions and list
-        subRegions.addAll(subRegionMapper.toSubRegionList(request.getSubRegions(), region));
+        subRegions.addAll(regionMapper.toSubRegionList(request.getSubRegions(), region));
         region.setSubRegions(subRegions);
 
         regionRepository.save(region);

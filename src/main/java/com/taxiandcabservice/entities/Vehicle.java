@@ -13,13 +13,17 @@ public class Vehicle {
     @NotBlank
     private String displayName;
 
-    @NotBlank
+    @Column(unique = true, nullable = false)
     private String plateNumber;
 
     @NotNull
     @OneToOne
-    @JoinColumn(name = "vehicleId")
+    @JoinColumn(name = "typeID")
     private VehicleType vehicleType;
+
+    @ManyToOne
+    @JoinColumn(name = "driverId", nullable = false)
+    private Driver driver;
 
     public Integer getId() {
         return id;
@@ -51,5 +55,13 @@ public class Vehicle {
 
     public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 }
