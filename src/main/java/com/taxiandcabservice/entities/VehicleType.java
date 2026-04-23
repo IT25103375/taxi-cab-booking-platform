@@ -1,9 +1,8 @@
 package com.taxiandcabservice.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 @Entity
@@ -12,15 +11,21 @@ public class VehicleType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private @Nullable Integer id;
 
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String name;
 
+    @NotBlank
     private String displayName;
 
+    @NotNull
     private double baseFare;
 
+    @NotNull
     private double pricePerKM;
 
-    private Integer maxPassengers;
+    @NotNull
+    private int maxPassengers;
 
     public @Nullable Integer getId() {
         return id;
@@ -54,11 +59,11 @@ public class VehicleType {
         this.pricePerKM = pricePerKM;
     }
 
-    public Integer getMaxPassengers() {
+    public int getMaxPassengers() {
         return maxPassengers;
     }
 
-    public void setMaxPassengers(Integer maxPassengers) {
+    public void setMaxPassengers(int maxPassengers) {
         this.maxPassengers = maxPassengers;
     }
 

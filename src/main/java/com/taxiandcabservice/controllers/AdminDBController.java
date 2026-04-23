@@ -4,8 +4,11 @@ import com.taxiandcabservice.dto.RegionRequest;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.repositories.VehicleTypeRepository;
 import com.taxiandcabservice.service.RegionService;
+import com.taxiandcabservice.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class AdminDBController {
 
     @Autowired
-    VehicleTypeRepository vehicleTypeRepository;
+    VehicleService vehicleService;
 
     @Autowired
     RegionService regionService;
 
     @PostMapping("/vehicle-type")
     public ResponseEntity<VehicleType> testVehicleTypeAdd(@RequestBody VehicleType vehicleType){
-        vehicleTypeRepository.save(vehicleType);
+        vehicleService.addVehicleType(vehicleType);
         return ResponseEntity.ok(vehicleType);
     }
 

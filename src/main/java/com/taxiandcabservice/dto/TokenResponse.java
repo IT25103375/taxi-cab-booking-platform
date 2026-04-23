@@ -1,6 +1,7 @@
 package com.taxiandcabservice.dto;
 
 public class TokenResponse {
+
     private String token;
     private String role;
     private boolean success = false;

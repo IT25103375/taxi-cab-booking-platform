@@ -9,13 +9,15 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class VehicleTypeService {
+public class VehicleService {
 
     @Autowired
     private VehicleTypeRepository vehicleTypeRepository;
 
     @Transactional
-    public Optional<VehicleType> findVehicleType(String name) {
-        return vehicleTypeRepository.findByName(name);
+    public Optional<VehicleType> findVehicleType(int id) {
+        return vehicleTypeRepository.findById(id);
     }
+
+    public void addVehicleType(VehicleType vehicleType) { vehicleTypeRepository.save(vehicleType); }
 }

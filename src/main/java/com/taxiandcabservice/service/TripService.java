@@ -1,12 +1,10 @@
 package com.taxiandcabservice.service;
 
-import com.taxiandcabservice.entities.SubRegion;
-import com.taxiandcabservice.entities.Trip;
+import com.taxiandcabservice.dto.TripCreationDTO;
+import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.repositories.TripRepository;
 import com.taxiandcabservice.enums.TripStatus;
-import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.repositories.DriverRepository;
-import com.taxiandcabservice.entities.Passenger;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,17 +25,24 @@ public class TripService {
     TripRepository tripRepository;
 
     @Transactional
-    public Optional<Trip> createTrip(Passenger passenger, SubRegion startSubRegion, SubRegion destSubRegion) {
-        List<Driver> driverList = driverRepository.findBySubRegion(startSubRegion);
+    public Optional<Trip> createTrip(TripCreationDTO dto) {
+
+        List<Driver> driverList = driverRepository.
+                findDriver(dto.getStartSubRegion(), dto.getVehicleType());
         Optional<Trip> opTrip = Optional.empty();
 
         for (Driver d : driverList) {
             if (driverRepository.bookDriverIfAvailable(d.getId()) == 1) {
+
+                // Check in case of race condition
+                if (d.getCurrentVehicleId() != null)
+                    throw new RuntimeException("Current vehicle not set");
+
                 Trip trip = new Trip();
                 trip.setDriver(d);
-                trip.setPassenger(passenger);
-                trip.setStartSubRegion(startSubRegion);
-                trip.setDestSubRegion(destSubRegion);
+                trip.setPassenger(dto.getPassenger());
+                trip.setStartSubRegion(dto.getStartSubRegion());
+                trip.setDestSubRegion(dto.getDestSubRegion());
                 trip.setTripStatus(TripStatus.PICKUP);
 
                 tripRepository.save(trip);

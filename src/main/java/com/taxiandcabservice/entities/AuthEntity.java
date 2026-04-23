@@ -1,15 +1,17 @@
 package com.taxiandcabservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.taxiandcabservice.enums.UserType;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class AuthEntity {
+public class AuthEntity implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -22,6 +24,7 @@ public class AuthEntity {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String encryptedPW;
 
     @Enumerated(EnumType.STRING)
@@ -33,6 +36,9 @@ public class AuthEntity {
     @OneToOne(mappedBy = "authEntity")
     private Passenger passenger;
 
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
     public String getEmail() {
         return email;
     }
@@ -41,14 +47,16 @@ public class AuthEntity {
         this.email = email;
     }
 
-    public String getEncryptedPW() {
+    @Override
+    public String getPassword() {
         return encryptedPW;
     }
 
-    public void setEncryptedPW(String encryptedPW) {
+    public void setPassword(String encryptedPW) {
         this.encryptedPW = encryptedPW;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -65,8 +73,8 @@ public class AuthEntity {
         this.userType = userType;
     }
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //noinspection preview
         return List.of(new SimpleGrantedAuthority("ROLE_" + getUserType().name()));
     }
 }
