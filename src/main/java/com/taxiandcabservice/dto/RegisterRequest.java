@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
-public class RegisterRequest {
+public class
+RegisterRequest {
     //Common
     @NotBlank
     private String username;

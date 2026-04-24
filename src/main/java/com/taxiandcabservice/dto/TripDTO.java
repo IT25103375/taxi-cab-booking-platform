@@ -5,28 +5,28 @@ import jakarta.validation.constraints.NotNull;
 
 public class TripDTO {
 
-    @NotBlank
-    private Integer startSubRegionId;
+    @NotNull
+    private int startSubRegionId;
 
-    @NotBlank
-    private Integer endSubRegionId;
+    @NotNull
+    private int endSubRegionId;
 
     @NotNull
     private int vehicleTypeId;
 
-    public Integer getStartSubRegionId() {
+    public int getStartSubRegionId() {
         return startSubRegionId;
     }
 
-    public void setStartSubRegionId(Integer startSubRegionId) {
+    public void setStartSubRegionId(int startSubRegionId) {
         this.startSubRegionId = startSubRegionId;
     }
 
-    public Integer getEndSubRegionId() {
+    public int getEndSubRegionId() {
         return endSubRegionId;
     }
 
-    public void setEndSubRegionId(Integer endSubRegionId) {
+    public void setEndSubRegionId(int endSubRegionId) {
         this.endSubRegionId = endSubRegionId;
     }
 

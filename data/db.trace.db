@@ -1,0 +1,6 @@
+2026-04-24 14:30:22.951259+05:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]=SUB_REGION"; SQL statement:
+=SUB_REGION [42000-240]
+2026-04-24 14:33:10.798323+05:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]SUB_REGION"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
+SUB_REGION [42001-240]
