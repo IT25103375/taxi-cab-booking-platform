@@ -50,6 +50,7 @@ public class DriverService {
             // Set currentVehicle to newVehicle if non is set
             driver.getRegisteredVehicles().add(newVehicle);
             if (driver.getCurrentVehicleId() == null) driver.setCurrentVehicleId(newVehicle.getId());
+            // FIXME: Check if this works properly
 
             vehicleRepository.save(newVehicle);
             driverRepository.save(driver);

@@ -40,7 +40,8 @@ public class UserController {
             return ResponseEntity.ok(userService.addUser(registerRequest));
         }
         catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw e; // lmao
+//            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
