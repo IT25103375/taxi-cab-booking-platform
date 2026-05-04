@@ -2,13 +2,10 @@ package com.taxiandcabservice.controllers;
 
 import com.taxiandcabservice.dto.RegionRequest;
 import com.taxiandcabservice.entities.*;
-import com.taxiandcabservice.repositories.VehicleTypeRepository;
 import com.taxiandcabservice.service.RegionService;
 import com.taxiandcabservice.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

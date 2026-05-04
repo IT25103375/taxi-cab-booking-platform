@@ -11,9 +11,5 @@ import java.util.Optional;
 
 public interface PassengerRepository extends CrudRepository<Passenger, Integer> {
 
-    @Query("""
-    SELECT p FROM Passenger p
-    WHERE p.authEntity.email = :email
-    """)
-    Optional<Passenger> findByEmail(String email);
+    Optional<Passenger> findByAuthEntity_Email(String email);
 }

@@ -1,6 +1,7 @@
 package com.taxiandcabservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.enums.DriverStatus;
 import jakarta.persistence.*;
 import org.jspecify.annotations.Nullable;
@@ -8,15 +9,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 @Entity
-public class Driver{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Nullable Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "authId", nullable = false)
-    private AuthEntity authEntity;
+public class Driver extends User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "driver",
@@ -35,6 +28,9 @@ public class Driver{
 
     @Enumerated(EnumType.STRING)
     private DriverStatus status;
+
+    // TODO: Implement start address and dest address and try to integrate with region system
+    // IDEA: Allow specifying street address while keeping regions intact
 
     public List<Vehicle> getRegisteredVehicles() {
         return registeredVehicles;
@@ -70,22 +66,6 @@ public class Driver{
 
     public void setStatus(DriverStatus status) {
         this.status = status;
-    }
-
-    public @Nullable Integer getId() {
-        return id;
-    }
-
-    public void setId(@Nullable Integer id) {
-        this.id = id;
-    }
-
-    public AuthEntity getAuthEntity() {
-        return authEntity;
-    }
-
-    public void setAuthEntity(AuthEntity authEntity) {
-        this.authEntity = authEntity;
     }
 
     public Integer getCurrentVehicleId() {

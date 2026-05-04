@@ -8,13 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/vehicle")
+@RequestMapping(path = "/api/vehicle")
 public class VehicleController {
 
     @Autowired
@@ -30,14 +27,14 @@ public class VehicleController {
         return ResponseEntity.ok(driverService.addVehicle(request));
     }
 
-    @PostMapping(path = "/current")
+    @PatchMapping(path = "/current")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     public ResponseEntity<Object> setCurrentVehicle(@Valid @RequestBody VehicleMinimalDTO request) {
 
         return ResponseEntity.ok(driverService.setCurrentVehicle(request));
     }
 
-    @PostMapping(path = "/remove")
+    @DeleteMapping(path = "/remove")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     public ResponseEntity<Object> removeVehicle(@Valid @RequestBody VehicleMinimalDTO request) {
 

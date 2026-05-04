@@ -2,9 +2,11 @@ package com.taxiandcabservice.entities;
 
 import com.taxiandcabservice.enums.TripStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Entity
@@ -13,16 +15,19 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private @Nullable Integer id;
 
-    @OneToOne
+    @NotNull
+    @ManyToOne
     private Passenger passenger;
 
-    @OneToOne
+    @ManyToOne
     private Driver driver;
 
-    @OneToOne
+    @NotNull
+    @ManyToOne
     private SubRegion startSubRegion;
 
-    @OneToOne
+    @NotNull
+    @ManyToOne
     private SubRegion destSubRegion;
 
     @Enumerated(EnumType.STRING)
@@ -30,9 +35,17 @@ public class Trip {
     private Date expDate;
 
     public Trip() {
-        tripStatus = TripStatus.UNSET;
+        tripStatus = TripStatus.REQUESTING;
         // Default exp of 1 day
-        expDate = Date.from(Instant.ofEpochSecond(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
+        expDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+    }
+
+    public @Nullable Integer getId() {
+        return id;
+    }
+
+    public void setId(@Nullable Integer id) {
+        this.id = id;
     }
 
     public Passenger getPassenger() {
