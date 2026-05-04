@@ -21,7 +21,7 @@ public class Vehicle {
     @JoinColumn(name = "typeID")
     private VehicleType vehicleType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driverId", nullable = false)
     private Driver driver;
 

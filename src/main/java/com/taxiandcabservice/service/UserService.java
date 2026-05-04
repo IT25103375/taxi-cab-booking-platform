@@ -1,5 +1,6 @@
 package com.taxiandcabservice.service;
 
+import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.auth.JwtUtil;
 import com.taxiandcabservice.dto.LoginRequest;
 import com.taxiandcabservice.dto.RegisterRequest;
@@ -11,8 +12,11 @@ import com.taxiandcabservice.enums.UserType;
 import com.taxiandcabservice.repositories.AuthEntityRepository;
 import com.taxiandcabservice.repositories.DriverRepository;
 import com.taxiandcabservice.repositories.PassengerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +69,7 @@ public class UserService {
 
             Passenger passenger = new Passenger();
             passenger.setAuthEntity(auth);
+            auth.setPassenger(passenger);
             authEntityRepository.save(auth);
             passengerRepository.save(passenger);
             return passenger;
@@ -77,6 +82,7 @@ public class UserService {
             driver.setRegion(regionService.findRegion(request.getRegionId()).orElseThrow());
 
             driver.setAuthEntity(auth);
+            auth.setDriver(driver);
             authEntityRepository.save(auth);
             driverRepository.save(driver);
             return driver;
@@ -107,8 +113,34 @@ public class UserService {
 
     // TODO: Implement logout with a blacklist cache since JWT is stateless
 
+    @PreAuthorize("hasRole('ROLE_PASSENGER')")
     @Transactional
-    public Optional<Passenger> findUser(String email) {
-        return passengerRepository.findByEmail(email);
+    public Passenger getCurrentPassenger() throws EntityNotFoundException {
+        return passengerRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("No such passenger"));
+    }
+
+    @PreAuthorize("hasRole('ROLE_DRIVER')")
+    @Transactional
+    public Driver getCurrentDriver() throws EntityNotFoundException {
+        return driverRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("No such driver"));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_DRIVER')")
+    @Transactional
+    public Integer[] getCurrentUser() throws EntityNotFoundException {
+
+        Optional<Driver> opDriver = driverRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail());
+        Optional<Passenger> opPassenger = passengerRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail());
+
+        return new Integer[]{
+                opPassenger.map(User::getId).orElse(null),
+                opDriver.map(User::getId).orElse(null)
+        };
     }
 }
