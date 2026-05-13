@@ -1,6 +1,8 @@
 package com.taxiandcabservice.service;
 
-import com.taxiandcabservice.dto.RegionRequest;
+import com.taxiandcabservice.dto.RegionCreationDTO;
+import com.taxiandcabservice.dto.RegionDTO;
+import com.taxiandcabservice.dto.SubRegionDTO;
 import com.taxiandcabservice.entities.Region;
 import com.taxiandcabservice.mappers.RegionMapper;
 import com.taxiandcabservice.repositories.RegionRepository;
@@ -36,7 +38,13 @@ public class RegionService {
     }
 
     @Transactional
-    public void addRegion(RegionRequest request) {
+    public List<RegionDTO> findAllRegions() { return regionMapper.toRegionDTOList(regionRepository.findAll()); }
+
+    @Transactional
+    public List<SubRegionDTO> findAllSubRegions(int regionId) { return regionMapper.toSubRegionDTOList(subRegionRepository.findAllByRegionId(regionId)); }
+
+    @Transactional
+    public void addRegion(RegionCreationDTO request) {
 
         // Find an existing region entity or make a new one
         Region region = regionRepository.findByName(request.getRegionName()).orElseGet(() -> (new Region())
@@ -44,7 +52,7 @@ public class RegionService {
                         .setDisplayName(request.getRegionDisplayName()));
 
         // Find existing subregions or return empty list
-        List<SubRegion> subRegions = subRegionRepository.findByRegionName(request.getRegionName());
+        List<SubRegion> subRegions = subRegionRepository.findAllByRegionName(request.getRegionName());
 
         // Add new subregions and list
         subRegions.addAll(regionMapper.toSubRegionList(request.getSubRegions(), region));

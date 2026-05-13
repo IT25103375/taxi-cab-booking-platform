@@ -7,17 +7,25 @@ import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 
-public class RegionRequest {
+public class RegionDTO {
+
+    @NotNull
+    private Integer regionId;
 
     @NotBlank
     @JsonDeserialize(converter = LowerCaseDeserialize.class)
-    private String regionName;
+    protected String regionName;
 
     @NotBlank
-    private String regionDisplayName;
+    protected String regionDisplayName;
 
-    @NotNull
-    private List<SubRegionRequest> subRegions;
+    public Integer getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Integer regionId) {
+        this.regionId = regionId;
+    }
 
     @JsonDeserialize(converter = LowerCaseDeserialize.class)
     public String getRegionName() {
@@ -25,17 +33,8 @@ public class RegionRequest {
     }
 
     @JsonDeserialize(converter = LowerCaseDeserialize.class)
-    public RegionRequest setRegionName(String regionName) {
+    public RegionDTO setRegionName(String regionName) {
         this.regionName = regionName;
-        return this;
-    }
-
-    public List<SubRegionRequest> getSubRegions() {
-        return subRegions;
-    }
-
-    public RegionRequest setSubRegions(List<SubRegionRequest> subRegions) {
-        this.subRegions = subRegions;
         return this;
     }
 
@@ -43,7 +42,7 @@ public class RegionRequest {
         return regionDisplayName;
     }
 
-    public RegionRequest setRegionDisplayName(String regionDisplayName) {
+    public RegionDTO setRegionDisplayName(String regionDisplayName) {
         this.regionDisplayName = regionDisplayName;
         return this;
     }

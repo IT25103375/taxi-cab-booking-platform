@@ -38,9 +38,6 @@ public class UserService {
     private AuthEntityRepository authEntityRepository;
 
     @Autowired
-    private VehicleService vehicleService;
-
-    @Autowired
     private RegionService regionService;
 
     @Autowired
@@ -50,7 +47,7 @@ public class UserService {
     public Object addUser(RegisterRequest request) {
 
         // Reject invalid type or admin type(Not implemented)
-        if (request.getType() == UserType.ADMIN) throw new RuntimeException("Unauthorized");
+        if (request.getUserType() == UserType.ADMIN) throw new RuntimeException("Unauthorized");
 
         // Reject if email exists
         if (authEntityRepository.findByEmail(request.getEmail()).isPresent())
@@ -61,11 +58,11 @@ public class UserService {
         auth.setUsername(request.getUsername());
         auth.setEmail(request.getEmail());
         auth.setPassword(passwordEncoder.encode(request.getPassword()));
-        auth.setUserType(request.getType());
+        auth.setUserType(request.getUserType());
 
         // Construct and save the appropriate user type to correct repository
 
-        if (request.getType() == UserType.PASSENGER) {
+        if (request.getUserType() == UserType.PASSENGER) {
 
             Passenger passenger = new Passenger();
             passenger.setAuthEntity(auth);
@@ -75,7 +72,7 @@ public class UserService {
             return passenger;
         }
 
-        else if (request.getType() == UserType.DRIVER) {
+        else if (request.getUserType() == UserType.DRIVER) {
 
             Driver driver = new Driver();
             driver.setSubRegion(regionService.findSubRegion(request.getSubRegionId()).orElseThrow());
@@ -88,7 +85,7 @@ public class UserService {
             return driver;
         }
 
-        throw new RuntimeException("Register error");
+        throw new RuntimeException("Unused_Register error");
     }
 
     @Transactional
@@ -104,6 +101,8 @@ public class UserService {
             token.setError("Invalid Username or Password");
         }
         else {
+
+            token.setSuccess(true);
             token.setToken(jwtUtil.generateToken(opAuth.get().getEmail()));
             token.setRole(opAuth.get().getUserType().name());
         }
