@@ -20,7 +20,7 @@ RegisterRequest {
     private String password;
 
     @NotNull
-    private UserType type;
+    private UserType userType;
 
     //Driver-only
     private Integer regionId;
@@ -52,12 +52,12 @@ RegisterRequest {
         this.email = email;
     }
 
-    public UserType getType() {
-        return type;
+    public UserType getUserType() {
+        return userType;
     }
 
-    public void setType(UserType type) {
-        this.type = type;
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public Integer getRegionId() {

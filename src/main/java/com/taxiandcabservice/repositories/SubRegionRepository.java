@@ -15,5 +15,11 @@ public interface SubRegionRepository extends CrudRepository<SubRegion, Integer> 
     SELECT sr FROM SubRegion sr
     WHERE sr.region.name = :regionName
     """)
-    List<SubRegion> findByRegionName(String regionName);
+    List<SubRegion> findAllByRegionName(String regionName);
+
+    @Query("""
+    SELECT sr FROM SubRegion sr
+    WHERE sr.region.id = :regionId
+    """)
+    List<SubRegion> findAllByRegionId(Integer regionId);
 }

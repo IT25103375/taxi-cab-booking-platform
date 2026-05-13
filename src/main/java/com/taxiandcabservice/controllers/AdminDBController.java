@@ -1,6 +1,6 @@
 package com.taxiandcabservice.controllers;
 
-import com.taxiandcabservice.dto.RegionRequest;
+import com.taxiandcabservice.dto.RegionCreationDTO;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.service.RegionService;
 import com.taxiandcabservice.service.VehicleService;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path="/api/admin")
 public class AdminDBController {
 
@@ -25,10 +26,10 @@ public class AdminDBController {
     }
 
     @PostMapping("/region")
-    public ResponseEntity<Object> testRegionAdd(@RequestBody RegionRequest regionRequest){
+    public ResponseEntity<Object> testRegionAdd(@RequestBody RegionCreationDTO regionCreationDTO){
 
         try {
-            regionService.addRegion(regionRequest);
+            regionService.addRegion(regionCreationDTO);
             return  ResponseEntity.ok("Success");
         }
         catch (Exception e) { return ResponseEntity.badRequest().body(e.getMessage()); }
