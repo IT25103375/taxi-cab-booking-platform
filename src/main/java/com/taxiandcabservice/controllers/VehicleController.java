@@ -2,13 +2,17 @@ package com.taxiandcabservice.controllers;
 
 import com.taxiandcabservice.dto.VehicleDTO;
 import com.taxiandcabservice.dto.VehicleMinimalDTO;
+import com.taxiandcabservice.dto.VehicleTypeDTO;
 import com.taxiandcabservice.mappers.VehicleMapper;
 import com.taxiandcabservice.service.DriverService;
+import com.taxiandcabservice.service.VehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -17,6 +21,9 @@ public class VehicleController {
 
     @Autowired
     DriverService driverService;
+
+    @Autowired
+    VehicleService vehicleService;
 
     @Autowired
     VehicleMapper vehicleMapper;
@@ -40,5 +47,11 @@ public class VehicleController {
     public ResponseEntity<Object> removeVehicle(@Valid @RequestBody VehicleMinimalDTO request) {
 
         return ResponseEntity.ok(driverService.removeVehicle(request));
+    }
+
+    @GetMapping(path = "/types")
+    public ResponseEntity<List<VehicleTypeDTO>> getVehicleTypes() {
+
+        return ResponseEntity.ok(vehicleMapper.toVehicleTypeDTOList(vehicleService.findAllVehicleTypes()));
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.enums.DriverStatus;
 import jakarta.persistence.*;
-import org.jspecify.annotations.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -17,7 +17,11 @@ public class Driver extends User {
             orphanRemoval = true)
     private List<Vehicle> registeredVehicles;
 
-    private Integer currentVehicleId;
+    @JsonIgnore
+    @NotNull
+    @OneToOne(mappedBy = "driver",
+            cascade = CascadeType.ALL)
+    private Vehicle currentVehicle;
 
     @JsonIgnore
     @ManyToOne
@@ -68,11 +72,11 @@ public class Driver extends User {
         this.status = status;
     }
 
-    public Integer getCurrentVehicleId() {
-        return currentVehicleId;
+    public Vehicle getCurrentVehicle() {
+        return currentVehicle;
     }
 
-    public void setCurrentVehicleId(Integer currentVehicleId) {
-        this.currentVehicleId = currentVehicleId;
+    public void setCurrentVehicle(Vehicle currentVehicle) {
+        this.currentVehicle = currentVehicle;
     }
 }

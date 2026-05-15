@@ -3,6 +3,7 @@ package com.taxiandcabservice.dto;
 import com.taxiandcabservice.entities.Passenger;
 import com.taxiandcabservice.entities.SubRegion;
 import com.taxiandcabservice.entities.VehicleType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class TripCreationDTO {
@@ -13,11 +14,33 @@ public class TripCreationDTO {
     @NotNull
     private VehicleType vehicleType;
 
+    @NotBlank
+    private String startAddress;
+
+    @NotBlank
+    private String destAddress;
+
     @NotNull
     private SubRegion startSubRegion;
 
     @NotNull
     private SubRegion destSubRegion;
+
+    public String getStartAddress() {
+        return startAddress;
+    }
+
+    public void setStartAddress(String startAddress) {
+        this.startAddress = startAddress;
+    }
+
+    public String getDestAddress() {
+        return destAddress;
+    }
+
+    public void setDestAddress(String destAddress) {
+        this.destAddress = destAddress;
+    }
 
     public SubRegion getDestSubRegion() {
         return destSubRegion;

@@ -1,9 +1,7 @@
 package com.taxiandcabservice.repositories;
 
 import com.taxiandcabservice.abstracts.User;
-import com.taxiandcabservice.entities.Driver;
-import com.taxiandcabservice.entities.SubRegion;
-import com.taxiandcabservice.entities.Trip;
+import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.enums.TripStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
@@ -42,14 +40,20 @@ public interface TripRepository extends CrudRepository<Trip, Integer> {
     SELECT t FROM Trip t
     WHERE t.startSubRegion = :startSubRegion
     AND t.tripStatus = 'REQUESTING'
+    AND t.vehicleType = :vehicleType
     """)
-    List<Trip> findTripRequests(SubRegion startSubRegion);
+    List<Trip> findTripRequests(SubRegion startSubRegion, VehicleType vehicleType);
 
     @Query("""
     SELECT t FROM Trip t
     WHERE t.startSubRegion = :startSubRegion
     AND t.tripStatus = 'REQUESTING'
     AND t.id = :tripId
+    AND t.vehicleType = :vehicleType
     """)
-    Optional<Trip> findTripRequest(SubRegion startSubRegion, Integer tripId);
+    Optional<Trip> findTripRequest(SubRegion startSubRegion, VehicleType vehicleType, Integer tripId);
+
+    List<Trip> findAllByPassenger(Passenger passenger);
+
+    List<Trip> findAllByDriver(Driver driver);
 }

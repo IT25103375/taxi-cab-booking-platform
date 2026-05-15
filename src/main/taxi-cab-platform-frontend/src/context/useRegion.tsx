@@ -6,11 +6,17 @@ import type {SubRegionGet} from "../models/SubRegion.ts";
 
 type RegionContextType = {
     regionId: number | null;
+    regionId2: number | null;
     regions: RegionGet[] | null;
     subRegions : SubRegionGet[] | null;
+    setSubRegions: (subRegions: SubRegionGet[] | null) => void;
+    setSubRegions2: (subRegions: SubRegionGet[] | null) => void;
+    subRegions2: SubRegionGet[] | null;
     loadingRegions: boolean;
     loadingSubRegions: boolean;
+    loadingSubRegions2: boolean;
     setRegionId: (id: number | null) => void;
+    setRegionId2: (id: number | null) => void;
 }
 
 type Props = { children: React.ReactNode };
@@ -20,10 +26,13 @@ const RegionContext = createContext<RegionContextType>({} as RegionContextType);
 export const RegionProvider = ({children} : Props) => {
 
     const [regionId, setRegionId] = useState<number | null>(null);
+    const [regionId2, setRegionId2] = useState<number | null>(null);
     const [regions, setRegions] = useState<RegionGet[] | null>([]);
     const [subRegions, setSubRegions] = useState<SubRegionGet[] | null>([]);
+    const [subRegions2, setSubRegions2] = useState<SubRegionGet[] | null>([]);
     const [loadingRegions, setRegionLoading] = useState<boolean>(true);
     const [loadingSubRegions, setSubRegionLoading] = useState<boolean>(true);
+    const [loadingSubRegions2, setSubRegionLoading2] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchRegions = async () => {
@@ -61,9 +70,30 @@ export const RegionProvider = ({children} : Props) => {
         fetchSubRegions();
     }, [regionId]);
 
+    useEffect(() => {
+        if (!regionId2) {
+            setSubRegions2([]);
+            return;
+        }
+
+        const fetchSubRegions2 = async () => {
+            try {
+                setSubRegionLoading2(true);
+                const res = await subRegionAPI(regionId2);
+                if (res) setSubRegions2(res.data);
+            } catch (error) {
+                handleError(error);
+            } finally {
+                setSubRegionLoading2(false);
+            }
+        };
+
+        fetchSubRegions2();
+    }, [regionId2]);
+
     return (
         <RegionContext.Provider value={
-            {loadingRegions, loadingSubRegions, regions, subRegions, regionId, setRegionId}}>
+            {loadingRegions, loadingSubRegions, loadingSubRegions2, regions, subRegions, setSubRegions, subRegions2, setSubRegions2, regionId, regionId2, setRegionId, setRegionId2}}>
             {children}
         </RegionContext.Provider>
     )

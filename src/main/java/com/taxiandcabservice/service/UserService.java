@@ -130,7 +130,7 @@ public class UserService {
 
     @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_DRIVER')")
     @Transactional
-    public Integer[] getCurrentUser() throws EntityNotFoundException {
+    public Integer[] getCurrentUserIds() throws EntityNotFoundException {
 
         Optional<Driver> opDriver = driverRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
                 getAuthentication().getPrincipal()).getEmail());
@@ -140,6 +140,21 @@ public class UserService {
         return new Integer[]{
                 opPassenger.map(User::getId).orElse(null),
                 opDriver.map(User::getId).orElse(null)
+        };
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_DRIVER')")
+    @Transactional
+    public User[] getCurrentUser() throws EntityNotFoundException {
+
+        Optional<Driver> opDriver = driverRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail());
+        Optional<Passenger> opPassenger = passengerRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
+                getAuthentication().getPrincipal()).getEmail());
+
+        return new User[]{
+                opPassenger.orElse(null),
+                opDriver.orElse(null)
         };
     }
 }
