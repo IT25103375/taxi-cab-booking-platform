@@ -1,6 +1,7 @@
 package com.taxiandcabservice.mappers;
 
 import com.taxiandcabservice.dto.VehicleDTO;
+import com.taxiandcabservice.dto.VehicleTypeDTO;
 import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.entities.Vehicle;
 import com.taxiandcabservice.entities.VehicleType;
@@ -10,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class VehicleMapper {
@@ -24,4 +27,8 @@ public abstract class VehicleMapper {
         return vehicleService.findVehicleType(vehicleTypeId)
                 .orElseThrow(() -> new EntityNotFoundException("VehicleType not found"));
     }
+
+    public abstract VehicleTypeDTO toVehicleTypeDTO(VehicleType vehicleType);
+
+    public abstract List<VehicleTypeDTO> toVehicleTypeDTOList(List<VehicleType> vehicleTypes);
 }

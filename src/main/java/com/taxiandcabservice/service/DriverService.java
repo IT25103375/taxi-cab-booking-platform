@@ -59,7 +59,7 @@ public class DriverService {
             // Modify driver to update two-way relation
             // Set currentVehicle to newVehicle if non is set
             driver.getRegisteredVehicles().add(newVehicle);
-            if (driver.getCurrentVehicleId() == null) driver.setCurrentVehicleId(newVehicle.getId());
+            if (driver.getCurrentVehicle() == null) driver.setCurrentVehicle(newVehicle);
             // FIXME: Check if this works properly
 
             vehicleRepository.save(newVehicle);
@@ -92,7 +92,7 @@ public class DriverService {
         if (!driver.getRegisteredVehicles().contains(vehicle))
             throw new EntityNotFoundException("Vehicle not registered under driver");
 
-        driver.setCurrentVehicleId(vehicle.getId());
+        driver.setCurrentVehicle(vehicle);
         driverRepository.save(driver);
         return true;
     }
@@ -111,8 +111,8 @@ public class DriverService {
         if (driver.getStatus() == DriverStatus.BOOKED)
             return false;
 
-        if (Objects.equals(driver.getCurrentVehicleId(), vehicle.getId()))
-            driver.setCurrentVehicleId(null);
+        if (Objects.equals(driver.getCurrentVehicle(), vehicle))
+            driver.setCurrentVehicle(null);
 
         if (driver.getRegisteredVehicles().remove(vehicle)) {
             driverRepository.save(driver);

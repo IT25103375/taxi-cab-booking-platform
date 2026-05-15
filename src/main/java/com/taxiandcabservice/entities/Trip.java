@@ -23,6 +23,12 @@ public class Trip {
     private Driver driver;
 
     @NotNull
+    private String startAddress;
+
+    @NotNull
+    private String destAddress;
+
+    @NotNull
     @ManyToOne
     private SubRegion startSubRegion;
 
@@ -30,8 +36,13 @@ public class Trip {
     @ManyToOne
     private SubRegion destSubRegion;
 
+    @Enumerated(EnumType.ORDINAL)
+    @ManyToOne
+    private VehicleType vehicleType;
+
     @Enumerated(EnumType.STRING)
     private TripStatus tripStatus;
+
     private Date expDate;
 
     public Trip() {
@@ -46,6 +57,30 @@ public class Trip {
 
     public void setId(@Nullable Integer id) {
         this.id = id;
+    }
+
+    public String getStartAddress() {
+        return startAddress;
+    }
+
+    public void setStartAddress(String startAddress) {
+        this.startAddress = startAddress;
+    }
+
+    public String getDestAddress() {
+        return destAddress;
+    }
+
+    public void setDestAddress(String destAddress) {
+        this.destAddress = destAddress;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public Passenger getPassenger() {

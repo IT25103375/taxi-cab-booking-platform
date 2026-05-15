@@ -1,7 +1,9 @@
 package com.taxiandcabservice.controllers;
 
+import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.dto.TripCreationDTO;
 import com.taxiandcabservice.dto.TripDTO;
+import com.taxiandcabservice.dto.TripDisplayDTO;
 import com.taxiandcabservice.dto.TripMinimalDTO;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
@@ -112,5 +114,12 @@ public class BookingController {
 
         if (tripService.startTrip(request) == 1) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.badRequest().body("Failed to start trip");
+    }
+
+    @GetMapping(path = "/trip")
+    @Transactional
+    public ResponseEntity<List<TripDisplayDTO>> getAllTrips() {
+        User[] users = userService.getCurrentUser();
+        return ResponseEntity.ok((users[0] != null) ? tripService.getAllPassengerTrips() : tripService.getAllDriverTrips());
     }
 }

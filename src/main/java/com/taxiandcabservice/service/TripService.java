@@ -1,11 +1,13 @@
 package com.taxiandcabservice.service;
 
 import com.taxiandcabservice.dto.TripCreationDTO;
+import com.taxiandcabservice.dto.TripDisplayDTO;
 import com.taxiandcabservice.dto.TripMinimalDTO;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.enums.DriverStatus;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
 import com.taxiandcabservice.exceptions.TripNotFoundException;
+import com.taxiandcabservice.mappers.TripMapper;
 import com.taxiandcabservice.repositories.TripRepository;
 import com.taxiandcabservice.enums.TripStatus;
 import com.taxiandcabservice.repositories.DriverRepository;
@@ -34,6 +36,9 @@ public class TripService {
     @Autowired
     TripRepository tripRepository;
 
+    @Autowired
+    TripMapper tripMapper;
+
     @Transactional
     public Trip createTrip(TripCreationDTO dto) {
 
@@ -44,8 +49,11 @@ public class TripService {
         Trip trip = new Trip();
         trip.setDriver(null);
         trip.setPassenger(dto.getPassenger());
+        trip.setStartAddress(dto.getStartAddress());
+        trip.setDestAddress(dto.getDestAddress());
         trip.setStartSubRegion(dto.getStartSubRegion());
         trip.setDestSubRegion(dto.getDestSubRegion());
+        trip.setVehicleType(dto.getVehicleType());
         trip.setTripStatus(TripStatus.REQUESTING);
 
         tripRepository.save(trip);
@@ -66,7 +74,7 @@ public class TripService {
         checkIfDriverBusy(driver);
 
         // TODO: DTO for trip details
-        return tripRepository.findTripRequests(driver.getSubRegion());
+        return tripRepository.findTripRequests(driver.getSubRegion(), driver.getCurrentVehicle().getVehicleType());
     }
 
     @PreAuthorize("hasRole('ROLE_DRIVER')")
@@ -77,7 +85,7 @@ public class TripService {
         checkIfDriverBusy(driver); // Recheck if driver is busy
 
         // Recheck if driver is within correct region
-        Trip trip = tripRepository.findTripRequest(driver.getSubRegion(), request.getTripId())
+        Trip trip = tripRepository.findTripRequest(driver.getSubRegion(), driver.getCurrentVehicle().getVehicleType(), request.getTripId())
                 .orElseThrow(() -> new TripNotFoundException("Trip does not exist"));
 
         if (trip.getTripStatus() == TripStatus.REQUESTING) {
@@ -107,7 +115,7 @@ public class TripService {
     @Transactional
     public int cancelTrip(TripMinimalDTO request) throws EntityNotFoundException {
 
-        Integer[] userIds = userService.getCurrentUser();
+        Integer[] userIds = userService.getCurrentUserIds();
         Trip trip = tripRepository.findById(request.getTripId())
                 .orElseThrow(() -> new EntityNotFoundException("Trip not found"));
 
@@ -155,4 +163,10 @@ public class TripService {
         }
         else return 0;
     }
+
+    @Transactional
+    public List<TripDisplayDTO> getAllPassengerTrips() { return tripMapper.toDisplayDTOList(tripRepository.findAllByPassenger(userService.getCurrentPassenger())); }
+
+    @Transactional
+    public List<TripDisplayDTO> getAllDriverTrips() { return tripMapper.toDisplayDTOList(tripRepository.findAllByDriver(userService.getCurrentDriver())); }
 }
