@@ -37,6 +37,7 @@ public abstract class TripMapper {
     @Mapping(source = "passenger", target = "passenger")
     public abstract TripCreationDTO toTrip(TripDTO dto, Passenger passenger);
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "passenger.authEntity.username", target = "passengerName")
     @Mapping(source = "driver.authEntity.username", target = "driverName")
     @Mapping(source = "startAddress", target = "startAddress")
@@ -47,6 +48,7 @@ public abstract class TripMapper {
     @Mapping(source = "destSubRegion.displayName", target = "destSubRegion")
     @Mapping(source = "vehicleType.displayName", target = "vehicleType")
     @Mapping(source = "tripStatus", target = "tripStatus")
+    @Mapping(source = "tripFare", target = "tripFare")
     @Mapping(source = "expDate", target = "expDate")
     public abstract TripDisplayDTO toDisplayDTO(Trip trip);
 

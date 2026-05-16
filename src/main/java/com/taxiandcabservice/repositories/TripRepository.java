@@ -53,6 +53,13 @@ public interface TripRepository extends CrudRepository<Trip, Integer> {
     """)
     Optional<Trip> findTripRequest(SubRegion startSubRegion, VehicleType vehicleType, Integer tripId);
 
+    @Query("""
+    SELECT t FROM Trip t
+    WHERE t.driver = :driver
+    AND t.tripStatus IN ('PICKUP', 'ONGOING')
+    """)
+    Optional<Trip> findBookedTrip(Driver driver);
+
     List<Trip> findAllByPassenger(Passenger passenger);
 
     List<Trip> findAllByDriver(Driver driver);

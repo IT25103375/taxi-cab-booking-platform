@@ -11,6 +11,7 @@ import com.taxiandcabservice.repositories.DriverRepository;
 import com.taxiandcabservice.repositories.PassengerRepository;
 import com.taxiandcabservice.service.UserService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,12 +55,10 @@ public class UserController {
         return userService.login(request);
     }
 
-    @PostMapping(path = "/auth/test")
-    public String TestMethod() {
-        return "test";
+    @GetMapping(path = "/auth/test")
+    public ResponseEntity<String> TestMethod() {
+        return ResponseEntity.ok("Success");
     }
-
-    // FIXME: REPLACE OBJECT RESPONSES WITH PROPER ONES
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {

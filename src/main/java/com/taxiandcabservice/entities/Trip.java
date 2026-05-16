@@ -43,12 +43,22 @@ public class Trip {
     @Enumerated(EnumType.STRING)
     private TripStatus tripStatus;
 
+    private double tripFare;
+
     private Date expDate;
 
     public Trip() {
         tripStatus = TripStatus.REQUESTING;
         // Default exp of 1 day
         expDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+    }
+
+    public double getTripFare() {
+        return tripFare;
+    }
+
+    public void setTripFare(double tripFare) {
+        this.tripFare = tripFare;
     }
 
     public @Nullable Integer getId() {

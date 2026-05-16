@@ -16,6 +16,17 @@ export const tripAPI = {
         }
     },
 
+    getDriverTrips: async () => {
+        try{
+            return await axios.get<TripList>(api + "api/booking/poll", {
+            });
+        }
+        catch(error)
+        {
+            handleError(error);
+        }
+    },
+
     postTrip: async (vehicleTypeId: number, startAddress: string, startSubRegionId: number,
                      destAddress: string, destSubRegionId: number) => {
         try{
@@ -25,6 +36,55 @@ export const tripAPI = {
                 startSubRegionId: startSubRegionId,
                 destAddress: destAddress,
                 destSubRegionId: destSubRegionId
+            })
+        }
+        catch (error)
+        {
+            handleError(error);
+        }
+    },
+
+    assignForTrip: async (tripId : number) => {
+        try{
+            return await axios.patch<string>(api + "api/booking/assign-driver", {
+                tripId: tripId,
+            })
+        }
+        catch (error)
+        {
+            handleError(error);
+        }
+    },
+
+    startTrip: async (tripId : number) => {
+        try{
+            return await axios.patch<string>(api + "api/booking/start-trip", {
+                tripId: tripId,
+            })
+        }
+        catch (error)
+        {
+            handleError(error);
+        }
+    },
+
+    finishTrip: async (tripId: number, tripKM : number) => {
+        try{
+            return await axios.patch<string>(api + "api/booking/finish-trip", {
+                tripId: tripId,
+                tripKM: tripKM,
+            })
+        }
+        catch (error)
+        {
+            handleError(error);
+        }
+    },
+
+    cancelTrip: async (tripId : number) => {
+        try{
+            return await axios.patch<string>(api + "api/booking/cancel-trip", {
+                tripId: tripId,
             })
         }
         catch (error)

@@ -3,6 +3,7 @@ import {regionAPI, subRegionAPI} from "../services/RegionService.tsx";
 import {handleError} from "../helpers/ErrorHandler.tsx";
 import type {RegionGet} from "../models/Region.ts";
 import type {SubRegionGet} from "../models/SubRegion.ts";
+import {useAuth} from "./useAuth.tsx";
 
 type RegionContextType = {
     regionId: number | null;
@@ -25,6 +26,8 @@ const RegionContext = createContext<RegionContextType>({} as RegionContextType);
 
 export const RegionProvider = ({children} : Props) => {
 
+    const { isLoggedIn } = useAuth();
+
     const [regionId, setRegionId] = useState<number | null>(null);
     const [regionId2, setRegionId2] = useState<number | null>(null);
     const [regions, setRegions] = useState<RegionGet[] | null>([]);
@@ -35,6 +38,7 @@ export const RegionProvider = ({children} : Props) => {
     const [loadingSubRegions2, setSubRegionLoading2] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!isLoggedIn()) return;
         const fetchRegions = async () => {
             try {
                 setRegionLoading(true);
@@ -50,6 +54,7 @@ export const RegionProvider = ({children} : Props) => {
     }, []);
 
     useEffect(() => {
+        if (!isLoggedIn()) return;
         if (!regionId) {
             setSubRegions([]);
             return;
@@ -71,6 +76,7 @@ export const RegionProvider = ({children} : Props) => {
     }, [regionId]);
 
     useEffect(() => {
+        if (!isLoggedIn()) return;
         if (!regionId2) {
             setSubRegions2([]);
             return;

@@ -4,6 +4,7 @@ import Home from "../pages/Home.tsx";
 import RegisterPage from "../pages/RegisterPage.tsx";
 import TripPage from "../pages/TripPage.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import Dashboard from "../pages/Dashboard.tsx";
 
 export const routes: RouteObject[] = [
     {
@@ -21,5 +22,9 @@ export const routes: RouteObject[] = [
     {
         path: "/trip",
         element: <ProtectedRoute><TripPage /></ProtectedRoute>
+    },
+    {
+        path: "/dashboard",
+        element: <ProtectedRoute><Dashboard /></ProtectedRoute>
     }
 ]

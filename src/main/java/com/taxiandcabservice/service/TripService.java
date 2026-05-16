@@ -3,6 +3,7 @@ package com.taxiandcabservice.service;
 import com.taxiandcabservice.dto.TripCreationDTO;
 import com.taxiandcabservice.dto.TripDisplayDTO;
 import com.taxiandcabservice.dto.TripMinimalDTO;
+import com.taxiandcabservice.dto.TripMinimalFareDTO;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.enums.DriverStatus;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
@@ -119,14 +120,19 @@ public class TripService {
         Trip trip = tripRepository.findById(request.getTripId())
                 .orElseThrow(() -> new EntityNotFoundException("Trip not found"));
 
-        if (!Objects.equals(trip.getDriver().getId(), userIds[0]) && !Objects.equals(trip.getPassenger().getId(), userIds[1]))
+        if (trip.getDriver() != null && !Objects.equals(trip.getDriver().getId(), userIds[1]))
             throw new RuntimeException("Unauthorized");
+        if (trip.getPassenger() != null && !Objects.equals(trip.getPassenger().getId(), userIds[0])) {
+            throw new RuntimeException("Unauthorized");
+        }
 
-        if (trip.getTripStatus() == TripStatus.PICKUP || trip.getTripStatus() == TripStatus.ONGOING) {
+        if (trip.getTripStatus() == TripStatus.PICKUP || trip.getTripStatus() == TripStatus.ONGOING ||
+                trip.getTripStatus() == TripStatus.REQUESTING) {
+
             trip.setTripStatus(TripStatus.CANCELLED);
             driverService.updateDriverStatus(trip);
         }
-        else trip.setTripStatus(TripStatus.CANCELLED);
+        else return 0;
 
         tripRepository.save(trip);
         return 1;
@@ -134,13 +140,18 @@ public class TripService {
 
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public int finishTrip(TripMinimalDTO request) {
+    public int finishTrip(TripMinimalFareDTO request) {
 
         Trip trip = tripRepository.findById(request.getTripId())
                 .orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+        Driver driver = userService.getCurrentDriver();
 
-        if (trip.getTripStatus() == TripStatus.ONGOING && trip.getDriver() == userService.getCurrentDriver()) {
+        if (trip.getTripStatus() == TripStatus.ONGOING && trip.getDriver() == driver) {
             trip.setTripStatus(TripStatus.FINISHED);
+            trip.setTripFare(trip.getVehicleType().getBaseFare() +
+                    (request.getTripKM() * trip.getVehicleType().getPricePerKM()));
+
+            driverService.updateDriverStatus(trip);
             tripRepository.save(trip);
 
             return 1;
@@ -162,6 +173,12 @@ public class TripService {
             return 1;
         }
         else return 0;
+    }
+
+    @PreAuthorize("hasRole('ROLE_DRIVER')")
+    @Transactional
+    public Optional<Trip> getBookedTrip(Driver driver) {
+        return tripRepository.findBookedTrip(driver);
     }
 
     @Transactional
