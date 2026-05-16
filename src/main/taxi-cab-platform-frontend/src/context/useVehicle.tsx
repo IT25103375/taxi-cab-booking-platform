@@ -6,6 +6,7 @@ import type {VehicleTypeGet} from "../models/VehicleType.ts";
 import {vehicleTypeAPI} from "../services/VehicleService.tsx";
 import {useAuth} from "./useAuth.tsx";
 import type {VehicleGet, VehicleList} from "../models/Vehicle.ts";
+import {UserType} from "../enums/UserType.ts";
 
 type VehicleContextType = {
     vehicleTypes: VehicleTypeGet[] | null;
@@ -41,7 +42,7 @@ export const VehicleProvider = ({children} : Props) => {
     const [loadingVehicleTypes, setVehicleTypeLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (!isLoggedIn()) return;
+        if (!isLoggedIn() || user?.role != UserType.Driver) return;
         const fetchAllVehicles = async () => {
             try {
                 setVehicleLoading(true);
@@ -57,7 +58,7 @@ export const VehicleProvider = ({children} : Props) => {
     }, [fetchVehicles]);
 
     useEffect(() => {
-        if (!isLoggedIn()) return;
+        if (!isLoggedIn() || user?.role != UserType.Driver) return;
         const fetchCurrentVehicleMethod = async () => {
             try {
                 const res = await vehicleAPI.getCurrent();
@@ -76,7 +77,6 @@ export const VehicleProvider = ({children} : Props) => {
         const fetchVehicleTypes = async () => {
             try {
                 setVehicleTypeLoading(true);
-                console.log("LOGGED")
                 const res = await vehicleTypeAPI.getAllTypes();
                 if (res) setVehicleTypes(res.data);
             } catch (error) {
@@ -90,7 +90,7 @@ export const VehicleProvider = ({children} : Props) => {
 
     const createVehicle =
         async (displayName: string, plateNumber: string, vehicleTypeId: number) => {
-            if (!isLoggedIn()) return;
+            if (!isLoggedIn() || user?.role == UserType.Driver) return;
             await vehicleAPI.createVehicle(displayName, plateNumber, vehicleTypeId)
                 .then((res) => {
                     if(res) {
@@ -114,7 +114,7 @@ export const VehicleProvider = ({children} : Props) => {
 
     const removeVehicle =
         async (vehicleId: number) => {
-            if (!isLoggedIn()) return;
+            if (!isLoggedIn() || user?.role != UserType.Driver) return;
             await vehicleAPI.removeVehicle(vehicleId)
                 .then((res) => {
                     if(res) {
@@ -138,7 +138,7 @@ export const VehicleProvider = ({children} : Props) => {
 
     const currentVehicle =
         async (vehicleId: number) => {
-            if (!isLoggedIn()) return;
+            if (!isLoggedIn() || user?.role != UserType.Driver) return;
             await vehicleAPI.currentVehicle(vehicleId)
                 .then((res) => {
                     if(res) {

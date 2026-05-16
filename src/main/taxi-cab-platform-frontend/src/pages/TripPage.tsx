@@ -63,9 +63,9 @@ const TripPage = () => {
                                     {" " + trip.destAddress  + ", " + trip.destSubRegion + ", " + trip.destRegion}
                                 </div>
                                 <div className="text-sm text-gray-200">
-                                    {"FIXME-DATE"} • {trip.tripStatus.charAt(0) + trip.tripStatus.slice(1).toLowerCase()}
+                                    {trip.tripStatus.charAt(0) + trip.tripStatus.slice(1).toLowerCase()}
                                 </div>
-                                <div className="text-sm font-medium">{"FIXME-FARE"}</div>
+                                <div className="text-sm font-medium">{(trip.tripFare != 0) ? trip.tripFare : "Not assigned"}</div>
                             </button>
                         ))}
                     </div>
@@ -104,10 +104,9 @@ const TripPage = () => {
                             <div>
                                 <p><strong>Pickup:</strong> {selectedTrip.startAddress + ", " + selectedTrip.startSubRegion + ", " + selectedTrip.startRegion}</p>
                                 <p><strong>Dropoff:</strong> {selectedTrip.destAddress  + ", " + selectedTrip.destSubRegion + ", " + selectedTrip.destRegion}</p>
-                                <p><strong>Date:</strong> {"FIXME-DATE"}</p>
-                                <p><strong>Driver:</strong> {(selectedTrip.driverName) ? selectedTrip.driverName : "Not assigned"}</p>
-                                <p><strong>Fare:</strong> {"FIXME-FARE"}</p>
                                 <p><strong>Status:</strong> {selectedTrip.tripStatus.charAt(0) + selectedTrip.tripStatus.slice(1).toLowerCase()}</p>
+                                <p><strong>Driver:</strong> {(selectedTrip.driverName) ? selectedTrip.driverName : "Not assigned"}</p>
+                                <p><strong>Fare:</strong> {(selectedTrip.tripFare != 0) ? selectedTrip.tripFare : "Not assigned"}</p>
                             </div>
                         </div>
                     ) : (
