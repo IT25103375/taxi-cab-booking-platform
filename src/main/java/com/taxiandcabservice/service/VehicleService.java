@@ -29,6 +29,9 @@ public class VehicleService {
     public List<VehicleType> findAllVehicleTypes() { return (List<VehicleType>) vehicleTypeRepository.findAll(); }
 
     @Transactional
+    public List<Vehicle> findAllVehiclesById(int driverId) { return vehicleRepository.findByDriver_Id(driverId); }
+
+    @Transactional
     public void addVehicleType(VehicleType vehicleType) { vehicleTypeRepository.save(vehicleType); }
 
     @Transactional

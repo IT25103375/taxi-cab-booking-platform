@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.tsx";
 import { tripFuncButton } from "../helpers/TripHelper.tsx"
 import {useAuth} from "../context/useAuth.tsx";
+import {UserType} from "../enums/UserType.ts";
 
 const TripPage = () => {
 
@@ -41,7 +42,6 @@ const TripPage = () => {
     const { register, handleSubmit, setValue, watch, formState: {errors}} = useForm<TripFormsInput>({ resolver: yupResolver(validation)})
     const handleTripRegister = (form: TripFormsInput) => {
         bookTrip(form.startAddress, form.startSubRegionId, form.destAddress, form.destSubRegionId, form.vehicleTypeId);
-        // TODO : Properly update instead of force refreshing
     }
 
     const { regions, subRegions, subRegions2, loadingRegions, loadingSubRegions, loadingSubRegions2,
@@ -75,7 +75,11 @@ const TripPage = () => {
                         <div className="flex justify-start">
                             <button
                                 onClick={() => setTripWindowOpen(true)}
-                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950"
+                                disabled={user?.role != UserType.Passenger}
+                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950
+                                disabled:bg-purple-950 disabled:text-gray-400
+                                disabled:border-purple-800 disabled:cursor-not-allowed
+                                disabled:opacity-100"
                             >
                                 New Trip
                             </button>
@@ -85,8 +89,8 @@ const TripPage = () => {
                                 onClick={() => {if (selectedTrip) cancelTrip(selectedTrip.id)}}
                                 disabled={!tripFuncButton("CancelTrip", selectedTrip, user)}
                                 className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950
-                                disabled:bg-gray-100 disabled:text-gray-400
-                                        disabled:border-gray-200 disabled:cursor-not-allowed
+                                disabled:bg-purple-950 disabled:text-gray-400
+                                        disabled:border-purple-800 disabled:cursor-not-allowed
                                         disabled:opacity-100"
                             >
                                 Cancel Trip

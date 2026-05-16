@@ -1,5 +1,4 @@
 import { routes } from './router/Routes'
-import './pages/Home.css'
 import { createBrowserRouter, RouterProvider  } from "react-router-dom"
 import {UserProvider} from "./context/useAuth.tsx";
 import {RegionProvider} from "./context/useRegion.tsx";

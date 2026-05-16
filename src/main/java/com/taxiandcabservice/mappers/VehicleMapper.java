@@ -1,6 +1,7 @@
 package com.taxiandcabservice.mappers;
 
 import com.taxiandcabservice.dto.VehicleDTO;
+import com.taxiandcabservice.dto.VehicleDisplayDTO;
 import com.taxiandcabservice.dto.VehicleTypeDTO;
 import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.entities.Vehicle;
@@ -30,5 +31,10 @@ public abstract class VehicleMapper {
 
     public abstract VehicleTypeDTO toVehicleTypeDTO(VehicleType vehicleType);
 
+    @Mapping(source = "vehicle.vehicleType.id", target = "vehicleTypeId")
+    public abstract VehicleDisplayDTO toVehicleDisplayDTO(Vehicle vehicle);
+
     public abstract List<VehicleTypeDTO> toVehicleTypeDTOList(List<VehicleType> vehicleTypes);
+
+    public abstract List<VehicleDisplayDTO> toVehicleDTOList(List<Vehicle> Vehicle);
 }

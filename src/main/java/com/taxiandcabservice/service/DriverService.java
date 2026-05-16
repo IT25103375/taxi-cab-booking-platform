@@ -1,6 +1,7 @@
 package com.taxiandcabservice.service;
 
 import com.taxiandcabservice.dto.VehicleDTO;
+import com.taxiandcabservice.dto.VehicleDisplayDTO;
 import com.taxiandcabservice.dto.VehicleMinimalDTO;
 import com.taxiandcabservice.entities.AuthEntity;
 import com.taxiandcabservice.entities.Driver;
@@ -42,7 +43,7 @@ public class DriverService {
 
     @Transactional
     @PreAuthorize("hasRole('ROLE_DRIVER')")
-    public Optional<Vehicle> addVehicle(VehicleDTO request) {
+    public Optional<VehicleDisplayDTO> addVehicle(VehicleDTO request) {
 
         // FIXME: STOP RELYING ON ROLLBACK AND IMPLEMENT PROPER CHECKS
         try {
@@ -65,7 +66,7 @@ public class DriverService {
             vehicleRepository.save(newVehicle);
             driverRepository.save(driver);
 
-            return Optional.of(newVehicle);
+            return Optional.of(vehicleMapper.toVehicleDisplayDTO(newVehicle));
         }
         catch (Exception e) {
             // TODO: Proper error system
@@ -95,6 +96,14 @@ public class DriverService {
         driver.setCurrentVehicle(vehicle);
         driverRepository.save(driver);
         return true;
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ROLE_DRIVER')")
+    public VehicleDisplayDTO getCurrentVehicle() {
+        Driver driver = userService.getCurrentDriver();
+
+        return vehicleMapper.toVehicleDisplayDTO(driver.getCurrentVehicle());
     }
 
     @Transactional

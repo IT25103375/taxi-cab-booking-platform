@@ -17,7 +17,7 @@ public class Vehicle {
     private String plateNumber;
 
     @NotNull
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeID")
     private VehicleType vehicleType;
 
