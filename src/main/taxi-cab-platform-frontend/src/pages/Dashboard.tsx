@@ -35,7 +35,6 @@ const Dashboard = () => {
         if (!selectedTrip) return;
 
         finishTrip(selectedTrip.id, form.distanceKM);
-        // TODO : Properly update instead of force refreshing
         setFareWindowOpen(false);
     }
 
@@ -81,7 +80,7 @@ const Dashboard = () => {
                                 <button
                                     type="button"
                                     onClick = {() => setFetchDriverTrip(fetchDriverTrip + 1)}
-                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700"
+                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700 active:bg-green-800"
                                 >
                                     Refresh
                                 </button>
@@ -142,7 +141,7 @@ const Dashboard = () => {
                                 <button
                                     type="button"
                                     onClick = {() => acceptTrip(selectedTrip.id)}
-                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700"
+                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700 active:bg-green-800"
                                 >
                                     Accept Trip
                                 </button>
@@ -151,7 +150,7 @@ const Dashboard = () => {
                                 <button
                                     type="button"
                                     onClick = {() => pickupTrip(selectedTrip.id)}
-                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700"
+                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700 active:bg-green-800"
                                 >
                                     Confirm Pickup
                                 </button>
@@ -160,7 +159,7 @@ const Dashboard = () => {
                                 <button
                                     type="button"
                                     onClick = {() => setFareWindowOpen(true)}
-                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700"
+                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700 active:bg-green-800"
                                 >
                                     Finish Trip
                                 </button>
@@ -169,7 +168,7 @@ const Dashboard = () => {
                                 <button
                                     type="button"
                                     onClick = {() => cancelTrip(selectedTrip.id)}
-                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700"
+                                    className="w-full rounded-lg bg-green-600 px-5 py-3 font-medium text-white hover:bg-green-700 active:bg-green-800"
                                 >
                                     Cancel Trip
                                 </button>

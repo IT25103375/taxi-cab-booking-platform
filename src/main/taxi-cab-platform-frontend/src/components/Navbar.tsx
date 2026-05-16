@@ -20,12 +20,14 @@ const Navbar = (props: Props) => {
           <div className="flex space-x-5 justify-start flex-grow ml-8 items-left">
             <Link
                 to="/dashboard"
+                reloadDocument
                 className="font-bold rounded text-white hover:opacity-70"
             >
               Dashboard
             </Link>
             <Link
                 to="/trip"
+                reloadDocument
                 className="font-bold rounded text-white hover:opacity-70"
             >
               Trips
@@ -33,6 +35,7 @@ const Navbar = (props: Props) => {
             {(user?.role == UserType.Driver) && (
             <Link
                 to="/vehicles"
+                reloadDocument
                 className="font-bold rounded text-white hover:opacity-70"
             >
               Vehicles
@@ -54,6 +57,7 @@ const Navbar = (props: Props) => {
                 <Link to="/login" className="hover:text-darkBlue">Login</Link>
                 <Link
                     to="/register"
+                    reloadDocument
                     className="px-8 py-3 font-bold rounded text-white bg-purple-800 hover:opacity-70"
                 >
                   Signup
