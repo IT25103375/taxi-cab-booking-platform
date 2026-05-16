@@ -117,7 +117,7 @@ const VehiclePage = () => {
                             <h2 className="text-2xl font-bold">Trip Details</h2>
                             <div>
                                 <p><strong>Name:</strong> {(selectedVehicle.displayName) ? selectedVehicle.displayName : "Not assigned"}</p>
-                                <p><strong>Vehicle Type:</strong> {(selectedVehicle.vehicleTypeId) ? vehicleTypes.find(item => item.id === selectedVehicle.vehicleTypeId).name : "Not assigned"}</p>
+                                <p><strong>Vehicle Type:</strong> {(selectedVehicle.vehicleTypeId) ? vehicleTypes?.find(item => item.id === selectedVehicle.vehicleTypeId)?.name : "Not assigned"}</p>
                             </div>
                         </div>
                     ) : (

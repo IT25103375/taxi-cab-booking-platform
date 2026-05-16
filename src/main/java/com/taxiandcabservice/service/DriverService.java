@@ -45,7 +45,6 @@ public class DriverService {
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     public Optional<VehicleDisplayDTO> addVehicle(VehicleDTO request) {
 
-        // FIXME: STOP RELYING ON ROLLBACK AND IMPLEMENT PROPER CHECKS
         try {
             Driver driver = driverRepository.findByAuthEntity_Email(((AuthEntity) SecurityContextHolder.getContext().
                             getAuthentication().getPrincipal()).getEmail())
@@ -61,7 +60,6 @@ public class DriverService {
             // Set currentVehicle to newVehicle if non is set
             driver.getRegisteredVehicles().add(newVehicle);
             if (driver.getCurrentVehicle() == null) driver.setCurrentVehicle(newVehicle);
-            // FIXME: Check if this works properly
 
             vehicleRepository.save(newVehicle);
             driverRepository.save(driver);

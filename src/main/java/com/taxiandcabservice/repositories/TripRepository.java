@@ -13,8 +13,6 @@ import java.util.Optional;
 
 public interface TripRepository extends CrudRepository<Trip, Integer> {
 
-    // FIXME: REPLACE BULK METHODS WITH MANUAL UPDATES
-
     @Transactional
     @Modifying
     @Query("""

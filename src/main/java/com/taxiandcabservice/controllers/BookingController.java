@@ -33,10 +33,8 @@ public class BookingController {
     @Autowired
     TripMapper tripMapper;
 
-    // TODO: Implement proper return responses instead of <Object>
     // TODO: Add fare calculation methods to be requested from
     // TODO: Implement start date/time for calculating fare
-    // TODO: Implement fare dto to return when requested and when finishing trip
 
     // TODO: Rest controller advice to stop duplicate try-catch error handling
     // TODO: Handle runtime exceptions like EntityNotFound in controller advice

@@ -74,7 +74,6 @@ public class TripService {
         Driver driver = userService.getCurrentDriver();
         checkIfDriverBusy(driver);
 
-        // TODO: DTO for trip details
         return tripRepository.findTripRequests(driver.getSubRegion(), driver.getCurrentVehicle().getVehicleType());
     }
 
@@ -106,7 +105,6 @@ public class TripService {
     public void checkIfDriverBusy(Driver driver) throws AlreadyBookedException {
 
         // Roundabout way of calling
-        // FIXME: Structure this better
         tripRepository.checkExpiredTrips(driver);
         if (driver.getStatus() == DriverStatus.BOOKED)
             throw new AlreadyBookedException("Driver already booked");
@@ -129,8 +127,9 @@ public class TripService {
         if (trip.getTripStatus() == TripStatus.PICKUP || trip.getTripStatus() == TripStatus.ONGOING ||
                 trip.getTripStatus() == TripStatus.REQUESTING) {
 
+            if (trip.getTripStatus() != TripStatus.REQUESTING)
+                driverService.updateDriverStatus(trip);
             trip.setTripStatus(TripStatus.CANCELLED);
-            driverService.updateDriverStatus(trip);
         }
         else return 0;
 

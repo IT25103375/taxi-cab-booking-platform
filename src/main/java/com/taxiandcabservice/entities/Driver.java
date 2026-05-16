@@ -31,9 +31,6 @@ public class Driver extends User {
     @Enumerated(EnumType.STRING)
     private DriverStatus status;
 
-    // TODO: Implement start address and dest address and try to integrate with region system
-    // IDEA: Allow specifying street address while keeping regions intact
-
     public List<Vehicle> getRegisteredVehicles() {
         return registeredVehicles;
     }

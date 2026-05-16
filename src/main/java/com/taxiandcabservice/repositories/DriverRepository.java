@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DriverRepository extends CrudRepository<Driver, Integer> {
-    // TODO: Replace email checks with id if necessary
 
     @Query("""
     SELECT d FROM Driver d

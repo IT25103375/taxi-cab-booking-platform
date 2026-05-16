@@ -12,6 +12,7 @@ export type TripGet = {
     destSubRegion: string,
     vehicleType: string,
     tripStatus: TripStatus,
+    tripFare: number,
     expDate: string,
 }
 
