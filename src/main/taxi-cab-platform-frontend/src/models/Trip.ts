@@ -1,6 +1,7 @@
 import type {TripStatus} from "../enums/TripStatus.ts";
 
 export type TripGet = {
+    id: number;
     passengerName: string,
     driverName: string,
     startAddress: string,

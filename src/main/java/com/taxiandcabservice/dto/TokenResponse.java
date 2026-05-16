@@ -2,10 +2,19 @@ package com.taxiandcabservice.dto;
 
 public class TokenResponse {
 
+    private String username;
     private String token;
     private String role;
     private boolean success = false;
     private String error;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getRole() {
         return role;

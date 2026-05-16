@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import type { UserProfile } from "../models/User";
-import { loginAPI, registerAPI } from "../services/AuthService";
+import {loginAPI, registerAPI, testLoginAPI} from "../services/AuthService";
 import { Bounce, Slide, toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
@@ -27,15 +27,37 @@ export const UserProvider = ({children} : Props) => {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        const user = localStorage.getItem("user");
-        const token = localStorage.getItem("token"); //local storage is not secure for this
-        if(user && token){
-            setUser(JSON.parse(user));
-            setToken(token);
-            axios.defaults.headers.common["Authorization"] = ("Bearer " + token);
-        }
-        setIsReady(true)
-    }, [])
+        const loginCheck = async (): Promise<boolean> => {
+            const res = await testLoginAPI();
+            return res?.data === "Success";
+        };
+
+        const initAuth = async () => {
+            const user = localStorage.getItem("user");
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                setIsReady(true);
+                return;
+            }
+
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            const success = await loginCheck();
+
+            if (user && success) {
+                setUser(JSON.parse(user));
+                setToken(token);
+            } else {
+                localStorage.removeItem("user");
+                localStorage.removeItem("token");
+                delete axios.defaults.headers.common["Authorization"];
+            }
+
+            setIsReady(true);
+        };
+
+        initAuth();
+    }, []);
 
     const registerUser =
         async (username: string, email: string, password: string,
@@ -58,8 +80,10 @@ export const UserProvider = ({children} : Props) => {
         await loginAPI(email, password).then((res) => {
             if(res) {
                 localStorage.setItem("token", res?.data.token);
-                const userObj = {
-                    email: res?.data.email,
+                const userObj: UserProfile = {
+                    username: res?.data.username,
+                    email: email,
+                    role: res?.data.role,
                 }
                 localStorage.setItem("user", JSON.stringify(userObj))
                 setToken(res?.data.token!);

@@ -9,6 +9,7 @@ import {registerAPI} from "../services/AuthService.tsx";
 import {Bounce, toast} from "react-toastify";
 import type {VehicleTypeGet} from "../models/VehicleType.ts";
 import {vehicleTypeAPI} from "../services/VehicleService.tsx";
+import {useAuth} from "./useAuth.tsx";
 
 type VehicleContextType = {
     vehicleTypes: VehicleTypeGet[] | null;
@@ -21,10 +22,12 @@ const VehicleContext = createContext<VehicleContextType>({} as VehicleContextTyp
 
 export const VehicleProvider = ({children} : Props) => {
 
+    const { isLoggedIn } = useAuth();
     const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeGet[] | null>([]);
     const [loadingVehicleTypes, setVehicleTypeLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        if (!isLoggedIn()) return;
         const fetchVehicleTypes = async () => {
             try {
                 setVehicleTypeLoading(true);

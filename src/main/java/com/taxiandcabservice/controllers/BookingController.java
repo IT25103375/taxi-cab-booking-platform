@@ -1,10 +1,7 @@
 package com.taxiandcabservice.controllers;
 
 import com.taxiandcabservice.abstracts.User;
-import com.taxiandcabservice.dto.TripCreationDTO;
-import com.taxiandcabservice.dto.TripDTO;
-import com.taxiandcabservice.dto.TripDisplayDTO;
-import com.taxiandcabservice.dto.TripMinimalDTO;
+import com.taxiandcabservice.dto.*;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
 import com.taxiandcabservice.exceptions.TripNotFoundException;
@@ -18,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,32 +55,34 @@ public class BookingController {
     @GetMapping(path = "/poll")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public ResponseEntity<Object> pollGetRequestedTrips() {
+    public ResponseEntity<List<TripDisplayDTO>> pollGetRequestedTrips() {
 
         try {
             List<Trip> requestedTrip = tripService.checkForNewTrips();
 
             // Intellij optimized, no idea about this functional expression
-            if (requestedTrip == null) return ResponseEntity.ok().body("No trips available");
-            else return ResponseEntity.ok(requestedTrip);
+            if (requestedTrip == null) return ResponseEntity.ok().build();
+            else return ResponseEntity.ok(tripMapper.toDisplayDTOList(requestedTrip));
         }
         catch (AlreadyBookedException aBE) {
-            return ResponseEntity.ok().body(aBE.getMessage());
+            Optional<Trip> bookedTrip = tripService.getBookedTrip(userService.getCurrentDriver());
+            return bookedTrip.map(trip -> ResponseEntity.ok(Collections.singletonList(tripMapper.toDisplayDTO(
+                    trip)))).orElseGet(() -> ResponseEntity.ok().body(Collections.emptyList()));
         }
     }
 
     @PatchMapping(path = "/assign-driver")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public ResponseEntity<Object> assignTripDriver(@Valid @RequestBody TripMinimalDTO request) {
+    public ResponseEntity<String> assignTripDriver(@Valid @RequestBody TripMinimalDTO request) {
 
         try {
             Optional<Trip> opTrip = tripService.assignForTrip(request);
 
             // Intellij things
-            return opTrip.<ResponseEntity<Object>>map(trip ->
-                    ResponseEntity.ok().body(trip)).orElseGet(() ->
-                    ResponseEntity.ok().body("Trip already taken"));
+            return opTrip.map(_ ->
+                    ResponseEntity.ok().body("Success")).orElseGet(() ->
+                    ResponseEntity.badRequest().body("Trip already taken"));
         }
         catch (TripNotFoundException | AlreadyBookedException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -92,7 +92,7 @@ public class BookingController {
     @PatchMapping(path = "/cancel-trip")
     @PreAuthorize("hasAnyRole('ROLE_PASSENGER', 'ROLE_DRIVER')")
     @Transactional
-    public ResponseEntity<Object> cancelTrip(@Valid @RequestBody TripMinimalDTO request) {
+    public ResponseEntity<String> cancelTrip(@Valid @RequestBody TripMinimalDTO request) {
 
         if (tripService.cancelTrip(request) == 1) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.badRequest().body("Failed to cancel trip");
@@ -101,7 +101,7 @@ public class BookingController {
     @PatchMapping(path = "/finish-trip")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public ResponseEntity<Object> finishTrip(@Valid @RequestBody TripMinimalDTO request) {
+    public ResponseEntity<String> finishTrip(@Valid @RequestBody TripMinimalFareDTO request) {
 
         if (tripService.finishTrip(request) == 1) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.badRequest().body("Failed to finish trip");
@@ -110,7 +110,7 @@ public class BookingController {
     @PatchMapping(path = "/start-trip")
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public ResponseEntity<Object> startTrip(@Valid @RequestBody TripMinimalDTO request) {
+    public ResponseEntity<String> startTrip(@Valid @RequestBody TripMinimalDTO request) {
 
         if (tripService.startTrip(request) == 1) return ResponseEntity.ok().body("Success");
         else return ResponseEntity.badRequest().body("Failed to start trip");

@@ -9,6 +9,9 @@ import java.util.Date;
 
 public class TripDisplayDTO {
 
+    @NotNull
+    private Integer id;
+
     @NotBlank
     private String passengerName;
 
@@ -39,7 +42,26 @@ public class TripDisplayDTO {
     @NotBlank
     private TripStatus tripStatus;
 
+    @NotNull
+    private double tripFare;
+
     private Date expDate;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public double getTripFare() {
+        return tripFare;
+    }
+
+    public void setTripFare(double tripFare) {
+        this.tripFare = tripFare;
+    }
 
     public String getPassengerName() {
         return passengerName;

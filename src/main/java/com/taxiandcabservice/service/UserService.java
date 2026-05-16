@@ -103,6 +103,7 @@ public class UserService {
         else {
 
             token.setSuccess(true);
+            token.setUsername(opAuth.get().getUsername());
             token.setToken(jwtUtil.generateToken(opAuth.get().getEmail()));
             token.setRole(opAuth.get().getUserType().name());
         }
