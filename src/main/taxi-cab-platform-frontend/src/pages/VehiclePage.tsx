@@ -52,8 +52,9 @@ const VehiclePage = () => {
                 <section className="overflow-x-auto space-y-3 rounded-xl border p-3">
                     <div className="flex space-x-1 overflow-x-auto">
                         {(vehicleTypes) && vehicles?.map((vehicle) => {
-                            // @ts-ignore
-                            const IconComponent = iconMap[vehicleTypes.find(item => item.id === vehicle.vehicleTypeId).name];
+                            const vehicleTypeName = vehicleTypes?.find(item => item.id === vehicle?.vehicleTypeId)?.name;
+                            const IconComponent = vehicleTypeName ? iconMap[vehicleTypeName] : null;
+
 
                             return (
                                 <button
@@ -98,7 +99,7 @@ const VehiclePage = () => {
                                 Set as current Vehicle
                             </button>
                         </div>
-                        <div className="flex justify-end">
+                        <div className="ml-auto">
                             <button
                                 onClick={() => {if (selectedVehicle) removeVehicle(selectedVehicle.id)}}
                                 disabled={(user?.role != UserType.Driver) || (!selectedVehicle)}

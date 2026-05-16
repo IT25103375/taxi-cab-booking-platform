@@ -65,7 +65,7 @@ const TripPage = () => {
                                 <div className="text-sm text-gray-200">
                                     {trip.tripStatus.charAt(0) + trip.tripStatus.slice(1).toLowerCase()}
                                 </div>
-                                <div className="text-sm font-medium">{(trip.tripFare != 0) ? trip.tripFare : "Not assigned"}</div>
+                                <div className="text-sm font-medium">Rs. {(trip.tripFare != 0) ? trip.tripFare : "Not assigned"}</div>
                             </button>
                         ))}
                     </div>
@@ -84,7 +84,7 @@ const TripPage = () => {
                                 New Trip
                             </button>
                         </div>
-                        <div className="flex justify-end">
+                        <div className="ml-auto">
                             <button
                                 onClick={() => {if (selectedTrip) cancelTrip(selectedTrip.id)}}
                                 disabled={!tripFuncButton("CancelTrip", selectedTrip, user)}
@@ -106,7 +106,7 @@ const TripPage = () => {
                                 <p><strong>Dropoff:</strong> {selectedTrip.destAddress  + ", " + selectedTrip.destSubRegion + ", " + selectedTrip.destRegion}</p>
                                 <p><strong>Status:</strong> {selectedTrip.tripStatus.charAt(0) + selectedTrip.tripStatus.slice(1).toLowerCase()}</p>
                                 <p><strong>Driver:</strong> {(selectedTrip.driverName) ? selectedTrip.driverName : "Not assigned"}</p>
-                                <p><strong>Fare:</strong> {(selectedTrip.tripFare != 0) ? selectedTrip.tripFare : "Not assigned"}</p>
+                                <p><strong>Fare:</strong> Rs. {(selectedTrip.tripFare != 0) ? selectedTrip.tripFare : "Not assigned"}</p>
                             </div>
                         </div>
                     ) : (
