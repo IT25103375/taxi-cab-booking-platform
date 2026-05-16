@@ -8,9 +8,6 @@ import {useAuth} from "./useAuth.tsx";
 import type {VehicleGet, VehicleList} from "../models/Vehicle.ts";
 
 type VehicleContextType = {
-    vehicleTypes: VehicleTypeGet[] | null;
-    loadingVehicleTypes: boolean;
-
     createVehicle: (displayName: string, plateNumber: string, vehicleTypeId: number) => void;
     removeVehicle: (vehicleId: number) => void;
     currentVehicle: (vehicleId: number) => void;
@@ -18,10 +15,6 @@ type VehicleContextType = {
     setFetchVehicles: (trigger: number) => void;
     loadingVehicle: boolean;
     vehicles: VehicleList | null;
-
-    fetchedCurrentVehicle: VehicleGet | null;
-    setFetchCurrentVehicle: (vehicleId: number) => void;
-    fetchCurrentVehicle: number;
 }
 
 type Props = { children: React.ReactNode };
@@ -32,13 +25,8 @@ export const VehicleProvider = ({children} : Props) => {
 
     const { user, isLoggedIn } = useAuth();
     const [vehicles, setVehicle] = useState<VehicleGet[] | null>([]);
-    const [fetchedCurrentVehicle, setFetchedCurrentVehicle] = useState<VehicleGet | null>(null);
     const [fetchVehicles, setFetchVehicles] = useState<number>(0);
-    const [fetchCurrentVehicle, setFetchCurrentVehicle] = useState<number>(0);
     const [loadingVehicle, setVehicleLoading] = useState<boolean>(true);
-
-    const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeGet[] | null>([]);
-    const [loadingVehicleTypes, setVehicleTypeLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (!isLoggedIn()) return;
@@ -55,38 +43,6 @@ export const VehicleProvider = ({children} : Props) => {
         };
         fetchAllVehicles();
     }, [fetchVehicles]);
-
-    useEffect(() => {
-        if (!isLoggedIn()) return;
-        const fetchCurrentVehicleMethod = async () => {
-            try {
-                const res = await vehicleAPI.getCurrent();
-                if (res) setFetchedCurrentVehicle(res?.data);
-            } catch (error) {
-                handleError(error);
-            } finally {
-            }
-        };
-        fetchCurrentVehicleMethod();
-    }, [fetchCurrentVehicle]);
-
-
-    useEffect(() => {
-        if (!isLoggedIn()) return;
-        const fetchVehicleTypes = async () => {
-            try {
-                setVehicleTypeLoading(true);
-                console.log("LOGGED")
-                const res = await vehicleTypeAPI.getAllTypes();
-                if (res) setVehicleTypes(res.data);
-            } catch (error) {
-                handleError(error);
-            } finally {
-                setVehicleTypeLoading(false);
-            }
-        };
-        fetchVehicleTypes();
-    }, []);
 
     const createVehicle =
         async (displayName: string, plateNumber: string, vehicleTypeId: number) => {
@@ -158,14 +114,11 @@ export const VehicleProvider = ({children} : Props) => {
                 }))
 
             setFetchVehicles(fetchVehicles + 1);
-            setFetchCurrentVehicle(fetchCurrentVehicle + 1)
         }
 
     return (
         <VehicleContext.Provider value={
-            {loadingVehicleTypes, vehicleTypes, createVehicle, fetchVehicles, removeVehicle, vehicles,
-                setFetchVehicles, loadingVehicle, currentVehicle, fetchCurrentVehicle, setFetchCurrentVehicle,
-                fetchedCurrentVehicle}}>
+            {createVehicle, fetchVehicles, removeVehicle, vehicles, setFetchVehicles, loadingVehicle, currentVehicle}}>
             {children}
         </VehicleContext.Provider>
     )

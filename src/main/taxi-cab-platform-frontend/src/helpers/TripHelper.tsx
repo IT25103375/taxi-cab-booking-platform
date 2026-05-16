@@ -5,6 +5,7 @@ import {TripStatus} from "../enums/TripStatus.ts";
 import type {UserProfile} from "../models/User.ts";
 
 export type TripFunctions =
+    "CreateTrip"|
     "AcceptTrip"|
     "PickupTrip"|
     "FinishTrip"|
@@ -16,6 +17,11 @@ export function tripFuncButton(TripFunction: TripFunctions, trip: TripGet | null
     if (!trip) return false;
 
     switch (TripFunction) {
+        case "CreateTrip": {
+            console.log(user.role)
+            return (user.role == UserType.Passenger)
+        }
+
         case "AcceptTrip":
             return (user.role == UserType.Driver && trip.tripStatus == TripStatus.Requesting)
 

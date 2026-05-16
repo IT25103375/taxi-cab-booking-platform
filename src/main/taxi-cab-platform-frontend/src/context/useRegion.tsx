@@ -38,7 +38,6 @@ export const RegionProvider = ({children} : Props) => {
     const [loadingSubRegions2, setSubRegionLoading2] = useState<boolean>(true);
 
     useEffect(() => {
-        if (!isLoggedIn()) return;
         const fetchRegions = async () => {
             try {
                 setRegionLoading(true);
@@ -54,7 +53,6 @@ export const RegionProvider = ({children} : Props) => {
     }, []);
 
     useEffect(() => {
-        if (!isLoggedIn()) return;
         if (!regionId) {
             setSubRegions([]);
             return;
@@ -76,7 +74,6 @@ export const RegionProvider = ({children} : Props) => {
     }, [regionId]);
 
     useEffect(() => {
-        if (!isLoggedIn()) return;
         if (!regionId2) {
             setSubRegions2([]);
             return;

@@ -18,9 +18,7 @@ public class Driver extends User {
     private List<Vehicle> registeredVehicles;
 
     @JsonIgnore
-    @NotNull
-    @OneToOne(mappedBy = "driver",
-            cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Vehicle currentVehicle;
 
     @JsonIgnore
