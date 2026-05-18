@@ -83,6 +83,7 @@ const RegisterPage = (props: Props) => {
                                     <input
                                         type="text"
                                         id="username"
+                                        autoComplete="username"
                                         className="bg-zinc-900 border border-zinc-600 text-zinc-400 sm:text-sm rounded-lg focus:ring-purple-900 focus:border-purple-900 block w-full p-2.5"
                                         placeholder="Enter Username"
                                         {...register("username")}
@@ -99,6 +100,7 @@ const RegisterPage = (props: Props) => {
                                     <input
                                         type="text"
                                         id="email"
+                                        autoComplete="email"
                                         className="bg-zinc-900 border border-zinc-600 text-zinc-400 sm:text-sm rounded-lg focus:ring-purple-900 focus:border-purple-900 block w-full p-2.5"
                                         placeholder="example@gmail.com"
                                         {...register("email")}
@@ -115,6 +117,7 @@ const RegisterPage = (props: Props) => {
                                     <input
                                         type="password"
                                         id="password"
+                                        autoComplete="new-password"
                                         placeholder="••••••••"
                                         className="bg-zinc-900 border border-zinc-600 text-zinc-400 sm:text-sm rounded-lg focus:ring-purple-900 focus:border-purple-900 block w-full p-2.5"
                                         {...register("password")}

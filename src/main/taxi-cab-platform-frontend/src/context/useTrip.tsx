@@ -8,6 +8,7 @@ import {UserType} from "../enums/UserType.ts";
 import {registerAPI} from "../services/AuthService.tsx";
 import {Bounce, Slide, toast} from "react-toastify";
 import {useAuth} from "./useAuth.tsx";
+import {useVehicle} from "./useVehicle.tsx";
 
 type TripContextType = {
     trips: TripGet[] | null;
@@ -61,12 +62,10 @@ export const TripProvider = ({children} : Props) => {
     useEffect(() => {
         const fetchDriverTrips = async () => {
             try {
-                if (!isLoggedIn()) return;
-                if (user?.role == UserType.Driver) {
-                    setDriverTripLoading(true);
-                    const res = await tripAPI.getDriverTrips();
-                    if (res) setDriverTrips(res.data);
-                }
+                if (!isLoggedIn() || user?.role != UserType.Driver) return;
+                setDriverTripLoading(true);
+                const res = await tripAPI.getDriverTrips();
+                if (res) setDriverTrips(res.data);
             } catch (error) {
                 handleError(error);
             } finally {

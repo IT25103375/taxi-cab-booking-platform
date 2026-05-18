@@ -2,14 +2,17 @@ package com.taxiandcabservice.controllers;
 
 import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.auth.JwtUtil;
+import com.taxiandcabservice.dto.BasicResponse;
 import com.taxiandcabservice.dto.LoginRequest;
 import com.taxiandcabservice.dto.RegisterRequest;
 import com.taxiandcabservice.dto.TokenResponse;
 import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.entities.Passenger;
+import com.taxiandcabservice.exceptions.RegisterException;
 import com.taxiandcabservice.repositories.DriverRepository;
 import com.taxiandcabservice.repositories.PassengerRepository;
 import com.taxiandcabservice.service.UserService;
+import jakarta.persistence.Basic;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,20 +41,21 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path = "/auth/register")
-    public ResponseEntity<Object> addUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<BasicResponse> addUser(@Valid @RequestBody RegisterRequest registerRequest) {
 
         try {
             return ResponseEntity.ok(userService.addUser(registerRequest));
         }
-        catch (RuntimeException e) {
-            throw e; // lmao
-//            return ResponseEntity.badRequest().body(e.getMessage());
+        catch (RegisterException rE) {
+            BasicResponse response = new BasicResponse();
+            response.setSuccess(false);
+            response.setError(rE.getMessage());
+            return ResponseEntity.ok().body(response);
         }
     }
 
     @PostMapping(path = "/auth/login")
     public TokenResponse login(@Valid @RequestBody LoginRequest request) {
-
         return userService.login(request);
     }
 

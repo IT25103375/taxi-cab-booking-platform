@@ -4,6 +4,7 @@ import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.dto.*;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
+import com.taxiandcabservice.exceptions.CurrentVehicleException;
 import com.taxiandcabservice.exceptions.TripNotFoundException;
 import com.taxiandcabservice.mappers.TripMapper;
 import com.taxiandcabservice.service.TripService;
@@ -58,14 +59,16 @@ public class BookingController {
         try {
             List<Trip> requestedTrip = tripService.checkForNewTrips();
 
-            // Intellij optimized, no idea about this functional expression
-            if (requestedTrip == null) return ResponseEntity.ok().build();
+            if (requestedTrip.isEmpty()) return ResponseEntity.ok().build();
             else return ResponseEntity.ok(tripMapper.toDisplayDTOList(requestedTrip));
         }
         catch (AlreadyBookedException aBE) {
             Optional<Trip> bookedTrip = tripService.getBookedTrip(userService.getCurrentDriver());
             return bookedTrip.map(trip -> ResponseEntity.ok(Collections.singletonList(tripMapper.toDisplayDTO(
                     trip)))).orElseGet(() -> ResponseEntity.ok().body(Collections.emptyList()));
+        }
+        catch (CurrentVehicleException cVE) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

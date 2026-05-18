@@ -1,6 +1,6 @@
 package com.taxiandcabservice.exceptions;
 
-public class CurrentVehicleException extends RuntimeException {
+public class CurrentVehicleException extends Exception {
     public CurrentVehicleException(String message) {
         super(message);
     }

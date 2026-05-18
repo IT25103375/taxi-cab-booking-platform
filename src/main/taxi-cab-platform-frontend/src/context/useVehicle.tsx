@@ -15,14 +15,16 @@ type VehicleContextType = {
     createVehicle: (displayName: string, plateNumber: string, vehicleTypeId: number) => void;
     removeVehicle: (vehicleId: number) => void;
     currentVehicle: (vehicleId: number) => void;
+
+    vehicles: VehicleList | null;
     fetchVehicles: number;
     setFetchVehicles: (trigger: number) => void;
     loadingVehicle: boolean;
-    vehicles: VehicleList | null;
 
     fetchedCurrentVehicle: VehicleGet | null;
-    setFetchCurrentVehicle: (vehicleId: number) => void;
     fetchCurrentVehicle: number;
+    setFetchCurrentVehicle: (vehicleId: number) => void;
+    loadingCurrentVehicle: boolean;
 }
 
 type Props = { children: React.ReactNode };
@@ -32,10 +34,13 @@ const VehicleContext = createContext<VehicleContextType>({} as VehicleContextTyp
 export const VehicleProvider = ({children} : Props) => {
 
     const { user, isLoggedIn } = useAuth();
-    const [vehicles, setVehicle] = useState<VehicleGet[] | null>([]);
+
     const [fetchedCurrentVehicle, setFetchedCurrentVehicle] = useState<VehicleGet | null>(null);
-    const [fetchVehicles, setFetchVehicles] = useState<number>(0);
     const [fetchCurrentVehicle, setFetchCurrentVehicle] = useState<number>(0);
+    const [loadingCurrentVehicle, setCurrentVehicleLoading] = useState<boolean>(true);
+
+    const [vehicles, setVehicle] = useState<VehicleGet[] | null>([]);
+    const [fetchVehicles, setFetchVehicles] = useState<number>(0);
     const [loadingVehicle, setVehicleLoading] = useState<boolean>(true);
 
     const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeGet[] | null>([]);
@@ -61,11 +66,13 @@ export const VehicleProvider = ({children} : Props) => {
         if (!isLoggedIn() || user?.role != UserType.Driver) return;
         const fetchCurrentVehicleMethod = async () => {
             try {
+                setCurrentVehicleLoading(true);
                 const res = await vehicleAPI.getCurrent();
                 if (res) setFetchedCurrentVehicle(res?.data);
             } catch (error) {
                 handleError(error);
             } finally {
+                setCurrentVehicleLoading(false);
             }
         };
         fetchCurrentVehicleMethod();
@@ -90,7 +97,7 @@ export const VehicleProvider = ({children} : Props) => {
 
     const createVehicle =
         async (displayName: string, plateNumber: string, vehicleTypeId: number) => {
-            if (!isLoggedIn() || user?.role == UserType.Driver) return;
+            if (!isLoggedIn() || user?.role != UserType.Driver) return;
             await vehicleAPI.createVehicle(displayName, plateNumber, vehicleTypeId)
                 .then((res) => {
                     if(res) {
@@ -110,11 +117,13 @@ export const VehicleProvider = ({children} : Props) => {
                 }))
 
             setFetchVehicles(fetchVehicles + 1);
+            setFetchCurrentVehicle(fetchCurrentVehicle + 1);
         }
 
     const removeVehicle =
         async (vehicleId: number) => {
             if (!isLoggedIn() || user?.role != UserType.Driver) return;
+
             await vehicleAPI.removeVehicle(vehicleId)
                 .then((res) => {
                     if(res) {
@@ -165,7 +174,7 @@ export const VehicleProvider = ({children} : Props) => {
         <VehicleContext.Provider value={
             {loadingVehicleTypes, vehicleTypes, createVehicle, fetchVehicles, removeVehicle, vehicles,
                 setFetchVehicles, loadingVehicle, currentVehicle, fetchCurrentVehicle, setFetchCurrentVehicle,
-                fetchedCurrentVehicle}}>
+                fetchedCurrentVehicle, loadingCurrentVehicle}}>
             {children}
         </VehicleContext.Provider>
     )

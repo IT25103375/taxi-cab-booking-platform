@@ -18,6 +18,7 @@ export type UserProfileToken = {
     username: string;
     token: string;
     role: UserType;
+    success: boolean;
 }
 
 export type UserProfile = {

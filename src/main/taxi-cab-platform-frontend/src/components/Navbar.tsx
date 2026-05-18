@@ -18,13 +18,24 @@ const Navbar = (props: Props) => {
             </Link>
           </div>
           <div className="flex space-x-5 justify-start flex-grow ml-8 items-left">
-            <Link
-                to="/dashboard"
-                reloadDocument
-                className="font-bold rounded text-white hover:opacity-70"
-            >
-              Dashboard
-            </Link>
+            {(user?.role == UserType.Driver) && (
+                <div className="space-x-5">
+                  <Link
+                      to="/dashboard"
+                      reloadDocument
+                      className="font-bold rounded text-white hover:opacity-70"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                      to="/vehicles"
+                      reloadDocument
+                      className="font-bold rounded text-white hover:opacity-70"
+                  >
+                    Vehicles
+                  </Link>
+                </div>
+            )}
             <Link
                 to="/trip"
                 reloadDocument
@@ -32,15 +43,6 @@ const Navbar = (props: Props) => {
             >
               Trips
             </Link>
-            {(user?.role == UserType.Driver) && (
-            <Link
-                to="/vehicles"
-                reloadDocument
-                className="font-bold rounded text-white hover:opacity-70"
-            >
-              Vehicles
-            </Link>
-            )}
           </div>
           {isLoggedIn() ?  (
               <div className="flex flex-col space-y-2 items-center text-back">

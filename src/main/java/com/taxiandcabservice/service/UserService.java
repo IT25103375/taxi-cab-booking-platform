@@ -2,13 +2,16 @@ package com.taxiandcabservice.service;
 
 import com.taxiandcabservice.abstracts.User;
 import com.taxiandcabservice.auth.JwtUtil;
+import com.taxiandcabservice.dto.BasicResponse;
 import com.taxiandcabservice.dto.LoginRequest;
 import com.taxiandcabservice.dto.RegisterRequest;
 import com.taxiandcabservice.dto.TokenResponse;
 import com.taxiandcabservice.entities.AuthEntity;
 import com.taxiandcabservice.entities.Driver;
 import com.taxiandcabservice.entities.Passenger;
+import com.taxiandcabservice.enums.DriverStatus;
 import com.taxiandcabservice.enums.UserType;
+import com.taxiandcabservice.exceptions.RegisterException;
 import com.taxiandcabservice.repositories.AuthEntityRepository;
 import com.taxiandcabservice.repositories.DriverRepository;
 import com.taxiandcabservice.repositories.PassengerRepository;
@@ -44,14 +47,14 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     @Transactional
-    public Object addUser(RegisterRequest request) {
+    public BasicResponse addUser(RegisterRequest request) throws RegisterException {
 
         // Reject invalid type or admin type(Not implemented)
-        if (request.getUserType() == UserType.ADMIN) throw new RuntimeException("Unauthorized");
+        if (request.getUserType() == UserType.ADMIN) throw new RegisterException("Unauthorized");
 
         // Reject if email exists
         if (authEntityRepository.findByEmail(request.getEmail()).isPresent())
-            throw new RuntimeException("Account with email already exists");
+            throw new RegisterException("Account with email already exists");
 
         // Save auth info
         AuthEntity auth = new AuthEntity();
@@ -69,7 +72,6 @@ public class UserService {
             auth.setPassenger(passenger);
             authEntityRepository.save(auth);
             passengerRepository.save(passenger);
-            return passenger;
         }
 
         else if (request.getUserType() == UserType.DRIVER) {
@@ -77,15 +79,18 @@ public class UserService {
             Driver driver = new Driver();
             driver.setSubRegion(regionService.findSubRegion(request.getSubRegionId()).orElseThrow());
             driver.setRegion(regionService.findRegion(request.getRegionId()).orElseThrow());
+            driver.setStatus(DriverStatus.AVAILABLE);
 
             driver.setAuthEntity(auth);
             auth.setDriver(driver);
             authEntityRepository.save(auth);
             driverRepository.save(driver);
-            return driver;
         }
+        else throw new RegisterException("Register error");
 
-        throw new RuntimeException("Unused_Register error");
+        BasicResponse response = new BasicResponse();
+        response.setSuccess(true);
+        return response;
     }
 
     @Transactional

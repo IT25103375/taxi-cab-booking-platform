@@ -1,6 +1,8 @@
 import axios from "axios";
 import { handleError } from "../helpers/ErrorHandler";
 import type {TripList, TripSet} from "../models/Trip.ts";
+import {vehicleAPI} from "./VehicleService.tsx";
+import {Bounce, toast} from "react-toastify";
 
 const api="http://localhost:8090/";
 
@@ -23,7 +25,9 @@ export const tripAPI = {
         }
         catch(error)
         {
-            handleError(error);
+            const currentVehicle = await vehicleAPI.getCurrent();
+            // Appropriate page will throw the relevant error
+            if (currentVehicle?.data) handleError(error);
         }
     },
 

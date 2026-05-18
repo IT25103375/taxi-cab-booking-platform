@@ -34,16 +34,14 @@ const VehiclePage = () => {
     const { createVehicle, vehicles, removeVehicle, currentVehicle, vehicleTypes, fetchedCurrentVehicle,
         setFetchCurrentVehicle, fetchCurrentVehicle} = useVehicle();
     const [ selectedVehicle, setSelectedVehicle ] = useState<VehicleGet | null>(null);
-    const [ tripWindowOpen, setTripWindowOpen ] = useState(false);
+    const [ vehicleWindowOpen, setVehicleWindowOpen ] = useState(false);
 
-    const { register, handleSubmit, setValue, watch, formState: {errors}} = useForm<VehicleFormsInput>({ resolver: yupResolver(validation)})
+    const { register, handleSubmit, setValue, watch, reset, formState: {errors}} = useForm<VehicleFormsInput>({ resolver: yupResolver(validation)})
     const handleTripRegister = (form: VehicleFormsInput) => {
         createVehicle(form.displayName, form.plateNumber, form.vehicleTypeId);
+        reset();
+        setVehicleWindowOpen(false);
     }
-
-    useEffect(() => {
-
-    }, [fetchCurrentVehicle])
 
     return (
         <>
@@ -54,7 +52,6 @@ const VehiclePage = () => {
                         {(vehicleTypes) && vehicles?.map((vehicle) => {
                             const vehicleTypeName = vehicleTypes?.find(item => item.id === vehicle?.vehicleTypeId)?.name;
                             const IconComponent = vehicleTypeName ? iconMap[vehicleTypeName] : null;
-
 
                             return (
                                 <button
@@ -77,7 +74,7 @@ const VehiclePage = () => {
                     <div className="flex flex-row space-x-4">
                         <div className="flex justify-start">
                             <button
-                                onClick={() => setTripWindowOpen(true)}
+                                onClick={() => setVehicleWindowOpen(true)}
                                 disabled={user?.role != UserType.Driver}
                                 className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950
                                 disabled:bg-purple-950 disabled:text-gray-400
@@ -119,6 +116,7 @@ const VehiclePage = () => {
                             <div>
                                 <p><strong>Name:</strong> {(selectedVehicle.displayName) ? selectedVehicle.displayName : "Not assigned"}</p>
                                 <p><strong>Vehicle Type:</strong> {(selectedVehicle.vehicleTypeId) ? vehicleTypes?.find(item => item.id === selectedVehicle.vehicleTypeId)?.name : "Not assigned"}</p>
+                                <p><strong>Plate Number:</strong> {(selectedVehicle.plateNumber) ? selectedVehicle.plateNumber : "Not assigned"}</p>
                             </div>
                         </div>
                     ) : (
@@ -126,9 +124,9 @@ const VehiclePage = () => {
                     )}
                 </section>
                 <Popup
-                    isOpen={tripWindowOpen}
+                    isOpen={vehicleWindowOpen}
                     size="md"
-                    onClose={() => setTripWindowOpen(false)}
+                    onClose={() => setVehicleWindowOpen(false)}
                 >
                     <div className="bg-zinc-900 p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">

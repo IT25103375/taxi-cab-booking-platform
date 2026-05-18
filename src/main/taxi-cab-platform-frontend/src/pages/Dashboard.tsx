@@ -5,13 +5,13 @@ import type {TripGet} from "../models/Trip.ts";
 import Popup from "../components/Popup.tsx";
 import {set, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {iconMap} from "../components/VehicleMap.tsx";
-import {useVehicle} from "../context/useVehicle.tsx";
-import {useRegion} from "../context/useRegion.tsx";
 import { useNavigate } from "react-router-dom";
 import {tripFuncButton} from "../helpers/TripHelper.tsx";
 import {useAuth} from "../context/useAuth.tsx";
 import Navbar from "../components/Navbar.tsx";
+import {vehicleAPI} from "../services/VehicleService.tsx";
+import {Bounce, toast} from "react-toastify";
+import {useVehicle} from "../context/useVehicle.tsx";
 
 const Dashboard = () => {
 
@@ -24,6 +24,7 @@ const Dashboard = () => {
     });
 
     const { user } = useAuth()
+    const { fetchedCurrentVehicle, loadingCurrentVehicle } = useVehicle()
     const { driverTrips, setFetchDriverTrip, fetchDriverTrip, acceptTrip, pickupTrip, finishTrip, cancelTrip } = useTrip();
     const [ selectedTrip, setSelectedTrip ] = useState<TripGet | null>(null);
     const [ selectedIndex, setSelectedIndex ] = useState<number>(-1);
@@ -39,6 +40,16 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
+        if (!loadingCurrentVehicle && !fetchedCurrentVehicle)
+            toast.error("Set a vehicle first!", {
+                hideProgressBar: true,
+                closeOnClick: true,
+                transition: Bounce,
+                position: "bottom-right",
+            })
+    }, [fetchedCurrentVehicle])
+
+    useEffect(() => {
         if (driverTrips && selectedIndex != -1) {
             setSelectedTrip(driverTrips[selectedIndex]);
         }
@@ -49,9 +60,8 @@ const Dashboard = () => {
         <>
             <Navbar/>
             <div className="flex h-screen gap-4 p-4">
-                <aside className="w-80 shrink-0 rounded-xl border bg-zinc-900 p-4 flex flex-col">
+                <aside className="flex grow rounded-xl border bg-zinc-900 p-4 flex flex-col">
                     <h2 className="mb-4 text-xl font-bold">Available Trips</h2>
-
                     <div className="flex-1 overflow-y-auto space-y-3">
                         {driverTrips != null && driverTrips.length > 0 ? (
                             <div>
@@ -89,18 +99,16 @@ const Dashboard = () => {
                     </div>
                 </aside>
 
-                {/* Center Panel: Sri Lanka Map Placeholder */}
-                <section className="flex-1 rounded-xl border bg-zinc-900 p-4 flex items-center justify-center">
-                    <div className="w-full h-full rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                        <div className="text-center text-gray-500">
-                            <h2 className="text-2xl font-bold mb-2">Sri Lanka Map</h2>
-                            <p>Map placeholder for trip markers</p>
-                        </div>
-                    </div>
-                </section>
+                {/*<section className="flex-1 rounded-xl border bg-zinc-900 p-4 flex items-center justify-center">*/}
+                {/*    <div className="w-full h-full rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">*/}
+                {/*        <div className="text-center text-gray-500">*/}
+                {/*            <h2 className="text-2xl font-bold mb-2">Sri Lanka Map</h2>*/}
+                {/*            <p>Map placeholder for trip markers</p>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</section>*/}
 
-                {/* Right Sidebar: Selected Trip Details */}
-                <aside className="w-96 shrink-0 rounded-xl border bg-zinc-900 p-6 overflow-y-auto">
+                <aside className="flex grow rounded-xl border bg-zinc-900 p-6 justify-center">
                     {selectedTrip ? (
                         <div className="space-y-4">
                             <h2 className="text-2xl font-bold">Trip Details</h2>

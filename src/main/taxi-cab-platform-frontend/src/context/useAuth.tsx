@@ -5,6 +5,8 @@ import { Bounce, Slide, toast } from "react-toastify";
 import React from "react";
 import axios from "axios";
 import type {UserType} from "../enums/UserType.ts";
+import {bool} from "yup";
+import type {BasicResponse} from "../models/BasicResponse.ts";
 
 type UserContextType = {
     user: UserProfile | null;
@@ -25,13 +27,12 @@ export const UserProvider = ({children} : Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const loginCheck = async (): Promise<boolean> => {
+        const res = await testLoginAPI();
+        return res?.data === "Success";
+    };
 
     useEffect(() => {
-        const loginCheck = async (): Promise<boolean> => {
-            const res = await testLoginAPI();
-            return res?.data === "Success";
-        };
-
         const initAuth = async () => {
             const user = localStorage.getItem("user");
             const token = localStorage.getItem("token");
@@ -65,8 +66,23 @@ export const UserProvider = ({children} : Props) => {
         await registerAPI(username, email, password, userType, regionId, subRegionId)
             .then((res) => {
             if(res) {
-                loginUser(email, password);
-                // navigate("/search");
+                const response: BasicResponse = {
+                    success: res?.data.success,
+                    error: res?.data?.error,
+                }
+                console.log("HERE")
+                console.log(res);
+                if (response.success) {
+                    loginUser(email, password);
+                }
+                else {
+                    toast.error(response.error, {
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        transition: Bounce,
+                        position: "bottom-right",
+                    })
+                }
             }
         }).catch((e) => toast.warning("Server error occured", {
                     hideProgressBar: true,
@@ -78,7 +94,7 @@ export const UserProvider = ({children} : Props) => {
 
     const loginUser = async (email:string, password: string) => {
         await loginAPI(email, password).then((res) => {
-            if(res) {
+            if(res && res.data.success) {
                 localStorage.setItem("token", res?.data.token);
                 const userObj: UserProfile = {
                     username: res?.data.username,
@@ -95,6 +111,14 @@ export const UserProvider = ({children} : Props) => {
                     position: "bottom-right",
                 })
                 // navigate("/search");
+            }
+            else {
+                toast.error("Login Failed", {
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    transition: Slide,
+                    position: "bottom-right",
+                })
             }
         }).catch((e) => toast.warning("Server error occured", {
                     hideProgressBar: true,

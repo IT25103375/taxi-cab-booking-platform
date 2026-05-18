@@ -7,6 +7,7 @@ import com.taxiandcabservice.dto.TripMinimalFareDTO;
 import com.taxiandcabservice.entities.*;
 import com.taxiandcabservice.enums.DriverStatus;
 import com.taxiandcabservice.exceptions.AlreadyBookedException;
+import com.taxiandcabservice.exceptions.CurrentVehicleException;
 import com.taxiandcabservice.exceptions.TripNotFoundException;
 import com.taxiandcabservice.mappers.TripMapper;
 import com.taxiandcabservice.repositories.TripRepository;
@@ -67,12 +68,15 @@ public class TripService {
 
     @PreAuthorize("hasRole('ROLE_DRIVER')")
     @Transactional
-    public List<Trip> checkForNewTrips() throws AlreadyBookedException {
-
+    public List<Trip> checkForNewTrips() throws AlreadyBookedException, CurrentVehicleException
+    {
         // Current system only checks if the driver's set subregion is same
         // as the subregion of the driver
         Driver driver = userService.getCurrentDriver();
         checkIfDriverBusy(driver);
+
+        if (driver.getCurrentVehicle() == null)
+            throw new CurrentVehicleException("Current vehicle is not set");
 
         return tripRepository.findTripRequests(driver.getSubRegion(), driver.getCurrentVehicle().getVehicleType());
     }

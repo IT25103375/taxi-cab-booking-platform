@@ -29,7 +29,7 @@ public class Driver extends User {
     private SubRegion subRegion;
 
     @Enumerated(EnumType.STRING)
-    private DriverStatus status;
+    private DriverStatus status =  DriverStatus.AVAILABLE;
 
     public List<Vehicle> getRegisteredVehicles() {
         return registeredVehicles;

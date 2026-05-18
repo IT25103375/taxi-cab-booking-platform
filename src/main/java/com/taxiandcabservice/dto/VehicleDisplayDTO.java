@@ -13,14 +13,25 @@ public class VehicleDisplayDTO {
     private int vehicleTypeId;
 
     @NotNull
+    private String plateNumber;
+
+    @NotNull
     private Integer id;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int Id) {
-        this.id = Id;
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDisplayName() {

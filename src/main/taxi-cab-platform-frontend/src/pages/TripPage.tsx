@@ -13,6 +13,7 @@ import Navbar from "../components/Navbar.tsx";
 import { tripFuncButton } from "../helpers/TripHelper.tsx"
 import {useAuth} from "../context/useAuth.tsx";
 import {UserType} from "../enums/UserType.ts";
+import { FiRefreshCcw } from "react-icons/fi";
 
 const TripPage = () => {
 
@@ -32,16 +33,17 @@ const TripPage = () => {
         destSubRegionId: Yup.number().required("DestSubRegion is required")
     });
 
-    const navigate = useNavigate();
     const { user } = useAuth();
-    const { vehicleTypes, loadingVehicleTypes } = useVehicle();
-    const { trips, loadingTrips, bookTrip, cancelTrip } = useTrip();
+    const { vehicleTypes } = useVehicle();
+    const { trips, bookTrip, cancelTrip, setFetchTrip, fetchTrip } = useTrip();
     const [ selectedTrip, setSelectedTrip ] = useState<TripGet | null>(null);
     const [ tripWindowOpen, setTripWindowOpen ] = useState(false);
 
-    const { register, handleSubmit, setValue, watch, formState: {errors}} = useForm<TripFormsInput>({ resolver: yupResolver(validation)})
+    const { register, handleSubmit, setValue, watch, reset, formState: {errors}} = useForm<TripFormsInput>({ resolver: yupResolver(validation)})
     const handleTripRegister = (form: TripFormsInput) => {
         bookTrip(form.startAddress, form.startSubRegionId, form.destAddress, form.destSubRegionId, form.vehicleTypeId);
+        reset();
+        setTripWindowOpen(false);
     }
 
     const { regions, subRegions, subRegions2, loadingRegions, loadingSubRegions, loadingSubRegions2,
@@ -65,33 +67,39 @@ const TripPage = () => {
                                 <div className="text-sm text-gray-200">
                                     {trip.tripStatus.charAt(0) + trip.tripStatus.slice(1).toLowerCase()}
                                 </div>
-                                <div className="text-sm font-medium">Rs. {(trip.tripFare != 0) ? trip.tripFare : "Not assigned"}</div>
+                                <div className="text-sm font-medium">{(trip.tripFare != 0) ? ("Rs." + trip.tripFare) : "Price not assigned"}</div>
                             </button>
                         ))}
                     </div>
                 </section>
                 <section className="flex-1 rounded-xl border p-6">
                     <div className="flex flex-row space-x-4">
-                        <div className="flex justify-start">
+                        <div className="flex justify-start space-x-2">
                             <button
                                 onClick={() => setTripWindowOpen(true)}
                                 disabled={user?.role != UserType.Passenger}
-                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950
+                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-900 active:bg-purple-950
                                 disabled:bg-purple-950 disabled:text-gray-400
                                 disabled:border-purple-800 disabled:cursor-not-allowed
                                 disabled:opacity-100"
                             >
                                 New Trip
                             </button>
+                            <button
+                                onClick={() => setFetchTrip(fetchTrip + 1)}
+                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-900 active:bg-purple-950"
+                            >
+                                <FiRefreshCcw />
+                            </button>
                         </div>
                         <div className="ml-auto">
                             <button
-                                onClick={() => {if (selectedTrip) cancelTrip(selectedTrip.id)}}
+                                onClick={() => {if (selectedTrip) cancelTrip(selectedTrip?.id)}}
                                 disabled={!tripFuncButton("CancelTrip", selectedTrip, user)}
-                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-950
+                                className="text-white text-l border bg-purple-900 border-purple-800 hover:opacity-70 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:bg-purple-900 active:bg-purple-900
                                 disabled:bg-purple-950 disabled:text-gray-400
-                                        disabled:border-purple-800 disabled:cursor-not-allowed
-                                        disabled:opacity-100"
+                                disabled:border-purple-800 disabled:cursor-not-allowed
+                                disabled:opacity-100"
                             >
                                 Cancel Trip
                             </button>
@@ -106,7 +114,7 @@ const TripPage = () => {
                                 <p><strong>Dropoff:</strong> {selectedTrip.destAddress  + ", " + selectedTrip.destSubRegion + ", " + selectedTrip.destRegion}</p>
                                 <p><strong>Status:</strong> {selectedTrip.tripStatus.charAt(0) + selectedTrip.tripStatus.slice(1).toLowerCase()}</p>
                                 <p><strong>Driver:</strong> {(selectedTrip.driverName) ? selectedTrip.driverName : "Not assigned"}</p>
-                                <p><strong>Fare:</strong> Rs. {(selectedTrip.tripFare != 0) ? selectedTrip.tripFare : "Not assigned"}</p>
+                                <p><strong>Fare:</strong> {(selectedTrip.tripFare != 0) ? ("Rs." + selectedTrip.tripFare) : "Not assigned"}</p>
                             </div>
                         </div>
                     ) : (
@@ -156,7 +164,7 @@ const TripPage = () => {
                                         <input
                                             type="startAddress"
                                             id="startAddress"
-                                            placeholder="123 Main St"
+                                            placeholder="123, Main St"
                                             className="bg-zinc-900 border border-zinc-400 sm:text-sm rounded-lg focus:ring-zinc-400 focus:border-zinc-400 block w-full p-2.5"
                                             {...register("startAddress")}
                                         />
@@ -212,7 +220,7 @@ const TripPage = () => {
                                         <input
                                             type="destAddress"
                                             id="destAddress"
-                                            placeholder="123 Main St"
+                                            placeholder="123, Main St"
                                             className="bg-zinc-900 border border-zinc-400 sm:text-sm rounded-lg focus:ring-zinc-400 focus:border-zinc-400 block w-full p-2.5"
                                             {...register("destAddress")}
                                         />
@@ -260,7 +268,7 @@ const TripPage = () => {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full text-white font-bold text-l bg-purple-700 hover:opacity-70 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center"
+                                className="w-full text-white font-bold text-l bg-purple-700 hover:opacity-70 focus:ring-primary-300 rounded-lg px-5 py-2.5 text-center active:bg-purple-800"
                             >
                                 Book
                             </button>
